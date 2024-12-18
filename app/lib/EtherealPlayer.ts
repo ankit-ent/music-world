@@ -25,11 +25,6 @@ export class EtherealPlayer {
     'Lydian': [0, 4, 7]  // Lydian uses major chord
   };
   playOnlyDiatonic: boolean = false;
-  audioBuffers: { [key: string]: { [key: string]: AudioBuffer } } = {
-    'piano': {},
-    'guitar': {}
-  };
-  currentInstrument: string = 'piano';
 
   constructor() {
     interface WindowWithWebkit extends Window {
@@ -70,7 +65,6 @@ export class EtherealPlayer {
     this.currentTempo = 1.2; // Default tempo
 
     this.updateScale();
-    this.loadSamples();
   }
 
   updateScale() {
@@ -192,31 +186,22 @@ export class EtherealPlayer {
   }
 
   playNote(note: string, duration = 4) {
-    const baseNote = note.replace(/[0-9]/g, '');
-    const octave = parseInt(note.match(/\d+/)?.[0] || '4');
-    const sampleOctave = 4;
-    const sampleNote = `${baseNote}${sampleOctave}`;
-    
-    // Create buffer source
-    const source = this.audioContext.createBufferSource();
-    source.buffer = this.audioBuffers[this.currentInstrument][sampleNote];
-    
-    // Calculate pitch shift for different octaves
-    const semitoneShift = (octave - sampleOctave) * 12;
-    source.playbackRate.value = Math.pow(2, semitoneShift / 12);
-
-    // Create gain node for envelope
+    // Revert back to oscillator-based sound
+    const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
+    
+    oscillator.type = 'sine';
+    oscillator.frequency.value = this.getFrequency(note);
+    
     gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.7, this.audioContext.currentTime + 0.1);
+    gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.1);
     gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
-
-    // Connect nodes
-    source.connect(gainNode);
+    
+    oscillator.connect(gainNode);
     gainNode.connect(this.audioContext.destination);
     
-    source.start();
-    source.stop(this.audioContext.currentTime + duration);
+    oscillator.start();
+    oscillator.stop(this.audioContext.currentTime + duration);
 
     this.createBubble(note);
   }
@@ -364,24 +349,5 @@ export class EtherealPlayer {
 
   setDiatonicMode(onlyDiatonic: boolean) {
     this.playOnlyDiatonic = onlyDiatonic;
-  }
-
-  async loadSamples() {
-    const instruments = ['piano', 'guitar'];
-    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const octave = 4; // We'll use one octave of samples and pitch-shift for other octaves
-
-    for (const instrument of instruments) {
-      for (const note of notes) {
-        const response = await fetch(`/samples/${instrument}/${note}${octave}.mp3`);
-        const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-        this.audioBuffers[instrument][`${note}${octave}`] = audioBuffer;
-      }
-    }
-  }
-
-  setInstrument(instrument: string) {
-    this.currentInstrument = instrument;
   }
 } 

@@ -161,17 +161,6 @@ export default function EtherealSpace() {
             <option value="diatonic" className="bg-white text-stone-700">Scale</option>
           </select>
         </div>
-
-        <div className="flex flex-col gap-3 w-full items-center">
-          <label className="text-sm font-medium text-stone-600">Sound</label>
-          <select
-            onChange={(e) => player?.setInstrument(e.target.value)}
-            className="w-[80px] bg-stone-600/10 px-2 py-2 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center"
-          >
-            <option value="piano" className="bg-white text-stone-700">Piano</option>
-            <option value="guitar" className="bg-white text-stone-700">Guitar</option>
-          </select>
-        </div>
       </div>
 
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2">
