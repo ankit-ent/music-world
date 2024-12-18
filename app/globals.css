@@ -17,5 +17,70 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(
+    circle at center,
+    rgba(180, 180, 180, 1) 0%,
+    rgba(180, 180, 180, 0.9) 10%,
+    rgba(180, 180, 180, 0.6) 20%,
+    rgba(180, 180, 180, 0.3) 30%,
+    rgba(180, 180, 180, 0.1) 50%,
+    transparent 70%
+  );
+  animation: starPulse 4s ease-out forwards;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(180, 180, 180, 0.25);
+  box-shadow: 0 0 2px rgba(180, 180, 180, 0.2);
+  animation: rippleEffect 6s ease-out forwards;
+}
+
+@keyframes starPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  10% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes rippleEffect {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
 }
