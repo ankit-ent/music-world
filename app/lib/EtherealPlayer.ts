@@ -32,7 +32,12 @@ export class EtherealPlayer {
   currentInstrument: string = 'piano';
 
   constructor() {
-    this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    interface WindowWithWebkit extends Window {
+      webkitAudioContext: typeof AudioContext;
+    }
+
+    this.audioContext = new (window.AudioContext || 
+      (window as unknown as WindowWithWebkit).webkitAudioContext)();
     this.isPlaying = false;
     this.noteInterval = null;
     this.tempoChangeTimeout = null;

@@ -21,20 +21,6 @@ export default function EtherealSpace() {
     player?.togglePlay();
   };
 
-  const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    const bps = 0.5 + (value / 100) * 2.5;
-    setTempoValue(bps);
-
-    if (player?.tempoChangeTimeout) {
-      clearTimeout(player.tempoChangeTimeout);
-    }
-
-    if (player?.isPlaying) {
-      player.updateTempo(bps);
-    }
-  };
-
   const handleRootChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!player) return;
     
