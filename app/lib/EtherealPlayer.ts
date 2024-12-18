@@ -415,7 +415,7 @@ export class EtherealPlayer {
       try {
         osc.disconnect();
         osc.stop(this.audioContext.currentTime);
-      } catch (e) {
+      } catch {
         // Ignore errors if oscillator already stopped
       }
     });
@@ -423,7 +423,7 @@ export class EtherealPlayer {
     this.activeGainNodes.forEach(gain => {
       try {
         gain.disconnect();
-      } catch (e) {
+      } catch {
         // Ignore errors
       }
     });

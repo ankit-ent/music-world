@@ -8,9 +8,9 @@ export default function GuidePage() {
             <li>
               <strong className="text-stone-900">Notes Position:</strong> Notes are arranged in a circle, like a clock:
               <ul className="list-none ml-6 mt-2">
-                <li>C at 12 o'clock</li>
-                <li>F at 3 o'clock</li>
-                <li>A at 9 o'clock</li>
+                <li>C at 12 o&apos;clock</li>
+                <li>F at 3 o&apos;clock</li>
+                <li>A at 9 o&apos;clock</li>
               </ul>
             </li>
             <li>
@@ -58,7 +58,7 @@ export default function GuidePage() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Chords</h2>
           <p className="mb-4 text-stone-500">
-            Sometimes you'll hear multiple notes played together (chords). These create richer harmonies
+            Sometimes you&apos;ll hear multiple notes played together (chords). These create richer harmonies
             and help establish the musical mood. Each scale has its own set of chords that sound
             particularly good together.
           </p>

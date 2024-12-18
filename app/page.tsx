@@ -57,7 +57,7 @@ export default function Home() {
                         ['C', 'G', 'D', 'A'],
                         ['E', 'B', 'F#', 'C#'],
                         ['F', 'A#', 'D#', 'G#']
-                      ].map((row, rowIndex) => (
+                      ].map((row) => (
                         row.map((note) => (
                           <div key={note} className="flex flex-col items-center">
                             <span className={`${note.includes('#') ? 'text-stone-500 text-xl' : 'text-stone-800'}`}>
@@ -149,7 +149,7 @@ export default function Home() {
               <h3 className="text-2xl font-serif mb-4 text-stone-700">Choosing Notes</h3>
               <div className="space-y-4">
                 <p className="pl-4 border-l-2 border-stone-300 text-stone-600 bg-white/50 backdrop-blur-sm p-4 rounded-r-lg shadow-sm">
-                  If you choose "All", some notes which don't belong to the scale/arrangement you have chosen, 
+                  If you choose &quot;All&quot;, some notes which don&apos;t belong to the scale/arrangement you have chosen, 
                   will still be played, though less frequently. These might sound weird, dissonant, or even 
                   unpleasant. But they add some spice, and make your music more interesting.
                 </p>
