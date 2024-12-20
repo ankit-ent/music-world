@@ -88,14 +88,15 @@ export default function DesktopControls({
         </div>
 
         <div className="flex flex-col gap-3 w-full items-center">
-          <label className="text-sm font-medium text-stone-600">Notes</label>
+          <label className="text-sm font-medium text-stone-600 text-center">
+            Add more<br />Colours?
+          </label>
           <select
             onChange={onDiatonicModeChange}
             value={isDiatonic ? 'diatonic' : 'all'}
-            className="w-[80px] bg-stone-600/10 px-2 py-2 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center"
-          >
-            <option value="all" className="bg-white text-stone-700">All</option>
-            <option value="diatonic" className="bg-white text-stone-700">Scale</option>
+            className="w-[80px] bg-stone-600/10 px-2 py-2 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center">
+            <option value="all" className="bg-white text-stone-700">Yes</option>
+            <option value="diatonic" className="bg-white text-stone-700">No</option>
           </select>
         </div>
       </div>

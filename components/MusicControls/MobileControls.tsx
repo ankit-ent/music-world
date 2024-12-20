@@ -60,14 +60,16 @@ export default function MobileControls({
 
         {/* Notes */}
         <div className="flex flex-col gap-1.5 items-center relative">
-          <label className="text-xs font-medium text-stone-600">Notes</label>
+          <label className="text-xs font-medium text-stone-600 text-center">
+            Add more<br />Colours?
+          </label>
           <select
             onChange={onDiatonicModeChange}
             value={isDiatonic ? 'diatonic' : 'all'}
             className="w-[60px] text-xs bg-stone-600/10 px-1.5 py-1.5 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center relative z-30"
           >
-            <option value="all" className="bg-white text-stone-700 text-xs">All</option>
-            <option value="diatonic" className="bg-white text-stone-700 text-xs">Scale</option>
+            <option value="all" className="bg-white text-stone-700 text-xs">Yes</option>
+            <option value="diatonic" className="bg-white text-stone-700 text-xs">No</option>
           </select>
         </div>
 

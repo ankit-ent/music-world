@@ -316,18 +316,14 @@ export class EtherealPlayer {
     const spaceElement = document.getElementById('space');
     if (!spaceElement) return;
 
-    // Get container boundaries
     const bounds = spaceElement.getBoundingClientRect();
-    
-    // Get base note and octave
-    const baseNote = note.replace(/[0-9]/g, '');
+    const baseNote = note.slice(0, -1);  // Remove octave number
     const octave = parseInt(note.match(/\d+/)?.[0] || '4');
+    
     const angle = this.notePositions[baseNote];
     
-    // Calculate position on the circle
     const baseRadius = this.octaveRadii[octave];
-    const radiusVariation = (Math.random() - 0.5) * 40;
-    const radius = baseRadius + radiusVariation;
+    const radius = baseRadius;
     
     const centerX = bounds.width / 2;
     const centerY = bounds.height / 2;
@@ -336,12 +332,10 @@ export class EtherealPlayer {
     const x = centerX + radius * Math.cos(radian);
     const y = centerY + radius * Math.sin(radian);
     
-    // Calculate bubble size
     const baseSize = window.innerWidth < 768 ? 24 : 32;
     const sizeMultiplier = 1 - ((octave - 3) * 0.1);
     const size = baseSize * sizeMultiplier;
     
-    // Check if bubble would be visible
     if (
       x - size/2 < 0 || 
       x + size/2 > bounds.width || 
@@ -351,11 +345,48 @@ export class EtherealPlayer {
       return; // Skip creating bubble if it would be outside bounds
     }
     
-    // Create bubble if it would be visible
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     
-    // Create ripple effect at the star's position
+    if (baseNote === this.currentRoot) {
+      bubble.classList.add('root-note');
+    } else if (this.chromaticNotes.includes(note)) {
+      const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
+      const noteIndex = this.chromaticOrder.indexOf(baseNote);
+      const semitones = (12 + noteIndex - rootIndex) % 12;
+      
+      // Map semitone positions to color indices for each mode
+      const colorMaps = {
+        'Major': {
+          1: 5,  // Minor second - Purple
+          3: 3,  // Minor third - Green
+          6: 2,  // Tritone - Red
+          8: 1,  // Minor sixth - Yellow
+          10: 4, // Minor seventh - Blue
+        },
+        'Minor': {
+          2: 5,  // Major second - Purple
+          4: 3,  // Major third - Green
+          7: 2,  // Augmented fifth - Red
+          9: 1,  // Major sixth - Yellow
+          11: 4, // Major seventh - Blue
+        },
+        'Lydian': {
+          1: 5,  // Minor second - Purple
+          3: 3,  // Minor third - Green
+          5: 2,  // Perfect fourth - Red
+          8: 1,  // Minor sixth - Yellow
+          10: 4, // Minor seventh - Blue
+        }
+      };
+      
+      const colorMap = colorMaps[this.currentMode as keyof typeof colorMaps];
+      const colorIndex = colorMap[semitones as keyof typeof colorMap];
+      if (colorIndex) {
+        bubble.classList.add(`chromatic-${colorIndex}`);
+      }
+    }
+    
     this.createRipple(x, y);
     
     bubble.style.width = `${size}px`;

@@ -39,6 +39,19 @@ body {
   animation: starPulse 4s ease-out forwards;
 }
 
+.bubble.root-note {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 1) 0%,
+    /* rgba(180, 180, 180, 1) 10%, */
+    rgba(180, 180, 180, 0.5) 20%,
+    rgba(180, 180, 180, 0.4) 30%,
+    rgba(180, 180, 180, 0.3) 40%,
+    rgba(180, 180, 180, 0.1) 60%,
+    transparent 80%
+  );
+}
+
 .ripple {
   position: absolute;
   border-radius: 50%;
@@ -83,4 +96,59 @@ body {
     opacity: 0;
     transform: translate(-50%, -50%);
   }
+}
+
+.bubble.chromatic-1 {
+  background: radial-gradient(
+    circle at center,
+    rgba(253, 224, 71, 0.8) 0%,    /* yellow-300 */
+    rgba(253, 224, 71, 0.6) 20%,
+    rgba(253, 224, 71, 0.3) 40%,
+    rgba(253, 224, 71, 0.1) 60%,
+    transparent 80%
+  );
+}
+
+.bubble.chromatic-2 {
+  background: radial-gradient(
+    circle at center,
+    rgba(252, 165, 165, 0.8) 0%,    /* red-300 */
+    rgba(252, 165, 165, 0.6) 20%,
+    rgba(252, 165, 165, 0.3) 40%,
+    rgba(252, 165, 165, 0.1) 60%,
+    transparent 80%
+  );
+}
+
+.bubble.chromatic-3 {
+  background: radial-gradient(
+    circle at center,
+    rgba(134, 239, 172, 0.8) 0%,    /* green-300 */
+    rgba(134, 239, 172, 0.6) 20%,
+    rgba(134, 239, 172, 0.3) 40%,
+    rgba(134, 239, 172, 0.1) 60%,
+    transparent 80%
+  );
+}
+
+.bubble.chromatic-4 {
+  background: radial-gradient(
+    circle at center,
+    rgba(147, 197, 253, 0.8) 0%,    /* blue-300 */
+    rgba(147, 197, 253, 0.6) 20%,
+    rgba(147, 197, 253, 0.3) 40%,
+    rgba(147, 197, 253, 0.1) 60%,
+    transparent 80%
+  );
+}
+
+.bubble.chromatic-5 {
+  background: radial-gradient(
+    circle at center,
+    rgba(216, 180, 254, 0.8) 0%,    /* purple-300 */
+    rgba(216, 180, 254, 0.6) 20%,
+    rgba(216, 180, 254, 0.3) 40%,
+    rgba(216, 180, 254, 0.1) 60%,
+    transparent 80%
+  );
 }

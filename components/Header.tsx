@@ -7,8 +7,8 @@ export default function Header() {
         Music Space
       </Link>
       <nav className="flex gap-6 text-sm text-stone-500">
-        <a href="#" className="hover:text-stone-800">About</a>
-        <Link href="/guide" className="hover:text-stone-800">Guide</Link>
+        <a href="/#what-is-music" className="hover:text-stone-800">What is Music?</a>
+        <Link href="/guide" className="hover:text-stone-800">Visualization Guide</Link>
       </nav>
     </header>
   );
