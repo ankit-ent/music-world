@@ -9,7 +9,7 @@ import DesktopControls from './MusicControls/DesktopControls';
 export default function EtherealSpace() {
   const [player, setPlayer] = useState<EtherealPlayer | null>(null);
   const [tempoValue, setTempoValue] = useState(2.0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing] = useState(false);
   const [currentRoot, setCurrentRoot] = useState('C');
   const [currentMode, setCurrentMode] = useState('Major');
   const [isDiatonic, setIsDiatonic] = useState(true);

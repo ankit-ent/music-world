@@ -1,7 +1,9 @@
 'use client';
 
+import { EtherealPlayerType } from '@/types/EtherealPlayer';
+
 interface MobileControlsProps {
-  player: any;
+  player: EtherealPlayerType | null;
   tempoValue: number;
   currentRoot: string;
   currentMode: string;
@@ -13,7 +15,6 @@ interface MobileControlsProps {
 }
 
 export default function MobileControls({
-  player,
   tempoValue,
   currentRoot,
   currentMode,

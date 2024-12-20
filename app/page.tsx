@@ -58,7 +58,7 @@ export default function Home() {
             <div className="space-y-8">
               <p className="text leading-relaxed text-stone-600">
                 While a more poetic definition might be that music is the language of emotion, 
-                the simplest scientific definition I could find was: <strong>"Music is the arrangement of sounds in time" </strong>
+                the simplest scientific definition I could find was: <strong>&ldquo;Music is the arrangement of sounds in time&rdquo;</strong>
                 <br /><br />
                 And the controls in the above visualization control exactly these three things; <strong>arrangement</strong>, <strong>sounds</strong>, and <strong>time</strong>. 
                 <br /><br />
@@ -75,7 +75,7 @@ export default function Home() {
                   <span className="absolute inset-0 bg-rose-100/50 rounded" style={{ transform: 'rotate(-1deg)' }} />
                   <span className="relative">harmony (feelings)</span>
                 </span>. */}
-                Here's a <a 
+                Here&apos;s a <a 
                   href="https://www.youtube.com/watch?v=_S6Z31v9XNQ" 
                   target="_blank" 
                   rel="noopener noreferrer" 
@@ -236,7 +236,7 @@ export default function Home() {
               </div>
               <p className="text-stone-600">
                 In the above visualization, these out of place notes show up as differently coloured bubbles.
-                (Only when you choose "Yes" for adding more colours. Otherwise they aren&apos;t played at all)
+                (Only when you choose &ldquo;Yes&ldquo; for adding more colours. Otherwise they aren&apos;t played at all)
               </p>
             </div>
           </div>
