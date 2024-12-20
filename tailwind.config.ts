@@ -33,6 +33,7 @@ export default {
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         serif: ["var(--font-crimson)", "Georgia", "serif"],
+        playfair: ["var(--font-playfair)", "Georgia", "serif"],
       },
       backgroundImage: {
         'gradient-radial-custom': 'radial-gradient(circle at center, var(--tw-gradient-stops))',

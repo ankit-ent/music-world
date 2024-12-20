@@ -1,3 +1,9 @@
+interface PlayerSettings {
+  root?: string;
+  mode?: string;
+  isDiatonic?: boolean;
+}
+
 export class EtherealPlayer {
   audioContext: AudioContext;
   isPlaying: boolean;
@@ -500,5 +506,39 @@ export class EtherealPlayer {
       4: window.innerWidth < 768 ? 160 : 250,
       5: window.innerWidth < 768 ? 220 : 350
     };
+  }
+
+  checkAndApplyChanges(newSettings: PlayerSettings) {
+    let hasChanges = false;
+    
+    if (newSettings.root && newSettings.root !== this.currentRoot) {
+      this.currentRoot = newSettings.root;
+      hasChanges = true;
+    }
+    
+    if (newSettings.mode && newSettings.mode !== this.currentMode) {
+      this.currentMode = newSettings.mode;
+      this.majorScaleSteps = this.modes[newSettings.mode];
+      hasChanges = true;
+    }
+    
+    if (newSettings.isDiatonic !== undefined && newSettings.isDiatonic !== this.playOnlyDiatonic) {
+      this.playOnlyDiatonic = newSettings.isDiatonic;
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      const wasPlaying = this.isPlaying;
+      if (wasPlaying) {
+        this.stop();
+        this.updateScale();
+        const scaleDuration = this.playScale();  // Play scale first
+        setTimeout(() => {
+          this.start(false);  // Then start random notes
+        }, scaleDuration + 500);
+      } else {
+        this.updateScale();
+      }
+    }
   }
 } 
