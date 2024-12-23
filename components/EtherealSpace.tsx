@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { EtherealPlayer } from '../app/lib/EtherealPlayer';
 import '@/app/styles/slider.css';
 import MobileControls from './MusicControls/MobileControls';
