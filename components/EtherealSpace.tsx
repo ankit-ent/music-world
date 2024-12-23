@@ -1,12 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { EtherealPlayer } from '../app/lib/EtherealPlayer';
 import '@/app/styles/slider.css';
 import MobileControls from './MusicControls/MobileControls';
 import DesktopControls from './MusicControls/DesktopControls';
 
-export default function EtherealSpace() {
+interface EtherealSpaceProps {
+  showRecordingControls?: boolean;
+}
+
+export default function EtherealSpace({ showRecordingControls = false }: EtherealSpaceProps) {
   const [player, setPlayer] = useState<EtherealPlayer | null>(null);
   const [tempoValue, setTempoValue] = useState(2.0);
   const [isRefreshing] = useState(false);
@@ -14,6 +18,8 @@ export default function EtherealSpace() {
   const [currentMode, setCurrentMode] = useState('Major');
   const [isDiatonic, setIsDiatonic] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
 
   useEffect(() => {
     const newPlayer = new EtherealPlayer();
@@ -108,6 +114,48 @@ export default function EtherealSpace() {
     }
   };
 
+  const startRecording = async () => {
+    try {
+      if (!player) return;
+      await player.startRecording();
+      setIsRecording(true);
+    } catch (err) {
+      console.error('Error starting recording:', err);
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      if (!player) return;
+      const recordedBlob = await player.stopRecording();
+      setRecordedAudio(recordedBlob);
+      setIsRecording(false);
+    } catch (err) {
+      console.error('Error stopping recording:', err);
+    }
+  };
+
+  const handleRecordToggle = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const handleDownload = () => {
+    if (recordedAudio) {
+      const url = URL.createObjectURL(recordedAudio);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `recording-${Date.now()}.webm`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return (
     <div className="h-full w-full relative">
       <div
@@ -153,19 +201,63 @@ export default function EtherealSpace() {
         </div>
 
         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
-          <button
-            onClick={handlePlayToggle}
-            className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
-          >
-            <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
-            </div>
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-              <div className="absolute inset-0 bg-white/20" />
-              <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
-            </div>
-            <span className="relative group-hover:text-stone-700 transition-colors duration-300">Start/Stop</span>
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={handlePlayToggle}
+              className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
+            >
+              <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
+              </div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute inset-0 bg-white/20" />
+                <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
+              </div>
+              <span className="relative group-hover:text-stone-700 transition-colors duration-300">Start/Stop</span>
+            </button>
+
+            {showRecordingControls && (
+              <>
+                <button
+                  onClick={handleRecordToggle}
+                  className={`bg-white/20 px-8 py-3 rounded-lg transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 ${
+                    isRecording ? 'border-red-400/50 text-red-500' : 'border-stone-300/30 text-stone-500'
+                  }`}
+                >
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
+                  </div>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="absolute inset-0 bg-white/20" />
+                    <div className={`absolute inset-0 border-2 rounded-lg transition-all duration-300 ${
+                      isRecording ? 'border-red-500/40' : 'border-stone-400/40'
+                    }`} />
+                  </div>
+                  <span className="relative group-hover:text-stone-700 transition-colors duration-300">
+                    {isRecording ? 'Stop Recording' : 'Record'}
+                  </span>
+                </button>
+
+                {recordedAudio && !isRecording && (
+                  <button
+                    onClick={handleDownload}
+                    className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
+                  >
+                    <div className="absolute inset-0">
+                      <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
+                    </div>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <div className="absolute inset-0 bg-white/20" />
+                      <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
+                    </div>
+                    <span className="relative group-hover:text-stone-700 transition-colors duration-300">
+                      Download
+                    </span>
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 

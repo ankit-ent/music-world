@@ -5,7 +5,8 @@ interface PlayerSettings {
 }
 
 export class EtherealPlayer {
-  audioContext: AudioContext;
+  public mainGainNode: GainNode;
+  public audioContext: AudioContext;
   isPlaying: boolean;
   noteInterval: NodeJS.Timeout | null;
   chromaticOrder: string[];
@@ -57,6 +58,8 @@ export class EtherealPlayer {
   private activeOscillators: OscillatorNode[] = [];
   private activeGainNodes: GainNode[] = [];
   private scaleTimeouts: NodeJS.Timeout[] = [];
+  private audioProcessor: ScriptProcessorNode | null = null;
+  private recordingBuffer: Float32Array[] = [];
 
   constructor() {
     interface WindowWithWebkit extends Window {
@@ -96,6 +99,10 @@ export class EtherealPlayer {
     this.currentTempo = 2.0;
 
     this.updateScale();
+
+    this.mainGainNode = this.audioContext.createGain();
+    this.mainGainNode.gain.value = 0.8;
+    this.mainGainNode.connect(this.audioContext.destination);
   }
 
   updateScale() {
@@ -265,9 +272,17 @@ export class EtherealPlayer {
     oscillator.type = 'sine';
     oscillator.frequency.value = this.getFrequency(note);
     
+    // Get octave from note
+    const octave = parseInt(note.match(/\d+/)?.[0] || '4');
+    
     // Reduce volume more at higher tempos
     const tempoFactor = Math.max(0.3, 1.0 - (this.currentTempo - 1.0) * 0.2);
-    const maxVolume = isChordNote ? 0.05 * tempoFactor : 0.3 * tempoFactor;
+    let maxVolume = isChordNote ? 0.05 * tempoFactor : 0.3 * tempoFactor;
+    
+    // Reduce volume for higher octaves
+    if (octave === 5) {
+      maxVolume *= 0.75;  // 75% volume for highest octave
+    }
     
     // Faster attack and release for higher tempos
     const attackTime = Math.min(0.05, 0.1 / this.currentTempo);
@@ -278,7 +293,7 @@ export class EtherealPlayer {
     gainNode.gain.linearRampToValueAtTime(0.001, now + duration - releaseTime);
     
     oscillator.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
+    gainNode.connect(this.mainGainNode);
     
     this.activeOscillators.push(oscillator);
     this.activeGainNodes.push(gainNode);
@@ -571,5 +586,112 @@ export class EtherealPlayer {
         this.updateScale();
       }
     }
+  }
+
+  async startRecording(): Promise<void> {
+    try {
+      this.recordingBuffer = [];
+      
+      // Create a separate recording path
+      const recordingDestination = this.audioContext.createMediaStreamDestination();
+      this.audioProcessor = this.audioContext.createScriptProcessor(4096, 2, 2);
+      
+      // Create a separate gain node for recording
+      const recordingGain = this.audioContext.createGain();
+      recordingGain.gain.value = 1.0;
+
+      // Create two paths:
+      // 1. Main path for live playback
+      this.mainGainNode.connect(this.audioContext.destination);
+      
+      // 2. Recording path
+      this.mainGainNode.connect(recordingGain);
+      recordingGain.connect(this.audioProcessor);
+      this.audioProcessor.connect(recordingDestination);
+
+      // Capture audio data
+      this.audioProcessor.onaudioprocess = (e) => {
+        const left = e.inputBuffer.getChannelData(0);
+        const right = e.inputBuffer.getChannelData(1);
+        
+        // Store exact copies
+        this.recordingBuffer.push(
+          new Float32Array(left),
+          new Float32Array(right)
+        );
+      };
+
+    } catch (err) {
+      console.error('Error starting recording:', err);
+      throw err;
+    }
+  }
+
+  async stopRecording(): Promise<Blob> {
+    return new Promise((resolve) => {
+      if (!this.audioProcessor) return;
+
+      // Remove the audio processing event handler
+      this.audioProcessor.onaudioprocess = null;
+
+      try {
+        // Disconnect nodes
+        this.audioProcessor.disconnect();
+      } catch (e) {
+        console.warn('Error disconnecting processor:', e);
+      }
+
+      // Convert buffer to WAV
+      const wavData = this.encodeWAV(this.recordingBuffer);
+      const blob = new Blob([wavData], { type: 'audio/wav' });
+      this.recordingBuffer = [];
+      
+      // Clear processor reference
+      this.audioProcessor = null;
+      
+      resolve(blob);
+    });
+  }
+
+  private encodeWAV(buffers: Float32Array[]): ArrayBuffer {
+    const length = buffers.reduce((acc, buf) => acc + buf.length, 0);
+    const sampleRate = this.audioContext.sampleRate;
+    const channels = 2;
+    
+    const buffer = new ArrayBuffer(44 + length * 2);
+    const view = new DataView(buffer);
+
+    // Write WAV header
+    const writeString = (view: DataView, offset: number, str: string) => {
+      for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    };
+
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, 36 + length * 2, true);
+    writeString(view, 8, 'WAVE');
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, channels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * channels * 2, true);
+    view.setUint16(32, channels * 2, true);
+    view.setUint16(34, 16, true);
+    writeString(view, 36, 'data');
+    view.setUint32(40, length * 2, true);
+
+    // Write audio data
+    let offset = 44;
+    for (let i = 0; i < buffers.length; i++) {
+      for (let j = 0; j < buffers[i].length; j++) {
+        const sample = Math.max(-1, Math.min(1, buffers[i][j]));
+        view.setInt16(offset, sample * 0x7FFF, true);
+        offset += 2;
+      }
+    }
+
+    return buffer;
   }
 } 
