@@ -10,16 +10,16 @@ const CollapsibleInfo = () => {
   
   return (
     <div className="mt-6">
-      <div className="bg-stone-600/90 backdrop-blur-sm rounded-lg shadow-lg">
+      <div className="bg-stone-600/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-stone-600/95 transition-colors">
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full text-left p-4 flex items-center justify-between"
+          className="w-full text-left p-4 flex items-center justify-between group"
         >
-          <p className="text-stone-100 font-medium pr-4">
+          <p className="text-stone-100 font-serif pr-6 text-sm sm:text-base">
             Wait. Does that mean different songs have different home notes? And how does our brain even know what the home note is for that particular song?
           </p>
           <svg 
-            className={`w-5 h-5 text-stone-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
+            className={`w-6 h-6 sm:w-6 sm:h-6 text-stone-400 group-hover:text-stone-300 transform transition-all duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
@@ -29,10 +29,10 @@ const CollapsibleInfo = () => {
         </button>
         
         <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-96' : 'max-h-0'}`}>
-          <div className="p-4 pt-0 text-stone-300">
+          <div className="p-4 pt-0 text-stone-300 text-sm sm:text-base">
             Okay, this is where it gets a bit crazy. Our brain only needs to hear a few notes, or a couple of seconds (sometimes even milliseconds) of a song and it just <em>immediately</em> knows what the home note is.
-            It just automatically establishes what the most stable sound in that music would be. All in a split of a second.
-            Our brain is simply <strong>too good</strong> at pattern recognition. You don&apos;t even have to know music theory or know anything about music in general, our brain does it subconciously.
+            It automatically establishes what the most stable sound in that music would be, given the context of the sounds being played.
+            Our brain is really <strong>good</strong> at pattern recognition. We don&apos;t even have to know music theory or know anything about music in general, it all happens subconciously.
           </div>
         </div>
       </div>
@@ -51,36 +51,15 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_65%)] pointer-events-none" />
         
         <div className="relative max-w-4xl mx-auto px-8">
-          <h2 className="text-5xl font-serif mb-16 text-stone-800 opacity-90">What is Music?</h2>
+          <h2 className="text-5xl font-sans mb-16 text-stone-800 opacity-90">What is Music?</h2>
           
           <div className="space-y-24 pb-16">
             {/* Basic Definition */}
             <div className="space-y-8">
               <p className="text leading-relaxed text-stone-600">
                 While a more poetic definition might be that music is the language of emotion, 
-                the simplest scientific definition I could find was: <strong>&ldquo;Music is the arrangement of sounds in time&rdquo;</strong>
-                <br /><br />
-                And the controls in the above visualization control exactly these three things; <strong>arrangement</strong>, <strong>sounds</strong>, and <strong>time</strong>. 
-                <br /><br />
-                {/* Apart from this, music is composed of three pillars: 
-                <span className="relative inline-block px-1">
-                  <span className="absolute inset-0 bg-yellow-100/50 rounded" style={{ transform: 'rotate(-2deg)' }} />
-                  <span className="relative">rhythm (time)</span>
-                </span>, 
-                <span className="relative inline-block px-1">
-                  <span className="absolute inset-0 bg-blue-100/50 rounded" style={{ transform: 'rotate(1deg)' }} />
-                  <span className="relative">melody (words or sentences of music)</span>
-                </span>, and 
-                <span className="relative inline-block px-1">
-                  <span className="absolute inset-0 bg-rose-100/50 rounded" style={{ transform: 'rotate(-1deg)' }} />
-                  <span className="relative">harmony (feelings)</span>
-                </span>. */}
-                Here&apos;s a <a 
-                  href="https://www.youtube.com/watch?v=_S6Z31v9XNQ" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-blue-600 hover:text-blue-800 underline"
-                >link of Jacob Collier explaining what music is</a> (in just 2 min) better than I ever could.
+                let&apos;s try to understand it in a more technical way.
+                Music is just a collection of sounds arranged in a way that makes sense to us.
               </p>
             </div>
 
@@ -89,15 +68,15 @@ export default function Home() {
 
             {/* Home Key Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-6 text-stone-700">Why am I learning alphabets again? And what is this Home key?</h3>
+              <h3 className="text-2xl font-serif mb-6 text-stone-700">"Why am I learning alphabets again? And what is this Home key?"</h3>
               <div className="space-y-4">
-                <p className="text-stone-600 font-semibold text-lg">Alphabets</p>
+                <p className="text-stone-500 font-semibold text-lg">--&gt; Alphabets</p>
                 
                 {/* Sound Wave Illustration */}
                 <ExplanationBox>
                   <p className="text-stone-600">
-                    Well, in all truthfulness, there are infinite sounds, each having their own wave frequencies. A lot of sounds aren&apos;t even audible to the human ear. But to make life easier, many cultures have standardized <span className="font-semibold text-stone-700">12 sounds</span> for music, which are represented by alphabets, 
-                    A through G (there are some with # or b, but essentially they are just a weird way of naming these sounds).
+                    Well, in all truthfulness, there are infinite sounds, each having their own sound frequencies. Sounds made by us, birds, trees, even wind. A lot of sounds aren&apos;t even audible to the human ear. But to make life easier, many cultures have standardized <span className="font-semibold text-stone-700">12 sounds</span> for music, which are represented by alphabets, 
+                    A through G (there are some with '#' or '♭', but essentially they are just a weird way of naming these sounds).
                   </p>
                   <br />
                   <p className="text-stone-600">
@@ -108,7 +87,7 @@ export default function Home() {
                 <div className="space-y-4">
                   {/* Notes display */}
                   <div className="flex items-center justify-center p-6 bg-white/70 rounded-lg backdrop-blur-sm shadow-sm">
-                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-12 gap-x-4 md:gap-x-8 gap-y-6 font-['Caveat'] text-2xl">
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-12 gap-x-4 md:gap-x-8 gap-y-6 font-caveat text-2xl">
                       {['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'].map((note) => (
                         <div key={note} className="flex flex-col items-center">
                           <span className={`${note.includes('#') ? 'text-stone-500 text-xl' : 'text-stone-800'}`}>
@@ -162,7 +141,7 @@ export default function Home() {
                 </div>
 
                 <br />
-                <p className="text-stone-600 font-semibold text-lg">Home Key/Note</p>
+                <p className="text-stone-500 font-semibold text-lg">--&gt; Home Key/Note</p>
                 <ExplanationBox>
                   <p className="text-stone-600">
                     Majority of music (I am pretty sure over 99%) has an affinity to one sound. Could be A, B, or any other non standardized sound.
@@ -174,9 +153,11 @@ export default function Home() {
                     </span>.
                   </p>
                 </ExplanationBox>
-                <p>
+                <p className="text-stone-600">
                   So when you select a particular home key, you are essentially saying that I want this sound to be the most stable note in this music. 
-                  Many other sounds will be played as well, but whenever this home note is played, your brain will feel the most at peace.
+                  Many other sounds will be played as well, but whenever this note is played, your brain will feel the most at home.
+                  <br /><br />
+                  This home note is represented by the <span className="font-semibold text-stone-700">white</span> bubble in the visualization.
                 </p>
               </div>
               <CollapsibleInfo />
@@ -187,30 +168,30 @@ export default function Home() {
 
             {/* Scales Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-4 text-stone-700">Alright. But where did major, minor come from?</h3>
+              <h3 className="text-2xl font-serif mb-4 text-stone-700">"Alright. But where did major, minor come from?"</h3>
               <div className="space-y-4">
                 <p className="text-stone-600">
                   Music is the arrangement of sounds in time. So, the arrangement (and also picking the notes to play) part comes from the 
                   <span className="relative inline-block px-1">
                     <span className="absolute inset-0 bg-purple-100/50 rounded" style={{ transform: 'rotate(-1deg)' }} />
-                    <span className="relative">scale</span>
+                    <span className="relative">mode</span>
                   </span>
-                  . Major, minor, lydian (there are a lot more) are types of scales, having their own set of rules to arranging sounds. Different arrangements of sounds evoke different  
-                  <span className="font-medium text-stone-800"> emotions</span>.
+                  . Major, minor, lydian (there are a lot more) are types of modes(also called "scales"), having their own set of rules to arranging sounds. Different arrangements of sounds evoke different  
+                  <span className="font-medium text-stone-800"> feelings</span>.
                 </p>
                 <div className="mt-6 space-y-4">
                   <ExplanationBox>
-                    <h4 className="text-lg font-medium text-stone-700 mb-2">Major Scale</h4>
+                    <h4 className="text-lg font-medium text-stone-700 mb-2">Major Mode</h4>
                     <p className="text-stone-600">Usually bright and happy sounding.</p>
                   </ExplanationBox>
                   
                   <ExplanationBox>
-                    <h4 className="text-lg font-medium text-stone-700 mb-2">Minor Scale</h4>
+                    <h4 className="text-lg font-medium text-stone-700 mb-2">Minor Mode</h4>
                     <p className="text-stone-600">More melancholic or mysterious sounding. Think of dramatic movie themes.</p>
                   </ExplanationBox>
                   
                   <ExplanationBox>
-                    <h4 className="text-lg font-medium text-stone-700 mb-2">Lydian Scale</h4>
+                    <h4 className="text-lg font-medium text-stone-700 mb-2">Lydian Mode</h4>
                     <p className="text-stone-600">Dreamy and floating feeling. Often used in fantasy or sci-fi music.</p>
                   </ExplanationBox>
                 </div>
@@ -222,7 +203,7 @@ export default function Home() {
 
             {/* Notes Selection Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-4 text-stone-700">Adding Colours</h3>
+              <h3 className="text-2xl font-serif mb-4 text-stone-700">"What does adding colours mean?"</h3>
               <div className="space-y-4">
                 <ExplanationBox>
                   <p className="text-stone-600">
@@ -236,7 +217,7 @@ export default function Home() {
               </div>
               <p className="text-stone-600">
                 In the above visualization, these out of place notes show up as differently coloured bubbles.
-                (Only when you choose &ldquo;Yes&ldquo; for adding more colours. Otherwise they aren&apos;t played at all)
+                (Only when you choose &ldquo;Yes&rdquo; for adding more colours. Otherwise they aren&apos;t played at all)
               </p>
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { OctaveConfig, octaveConfigs } from './OctaveConfig';
+
 interface PlayerSettings {
   root?: string;
   mode?: string;
@@ -17,7 +19,6 @@ export class EtherealPlayer {
   chromaticNotes: string[];
   baseFrequencies: { [key: string]: number };
   notePositions: { [key: string]: number };
-  octaveRadii: { [key: number]: number };
   currentTempo: number;
   modes: { [key: string]: number[] } = {
     'Major': [0, 2, 4, 5, 7, 9, 11],
@@ -90,12 +91,6 @@ export class EtherealPlayer {
       'F#': 180, 'G': 210, 'G#': 240, 'A': 270, 'A#': 300, 'B': 330
     };
 
-    this.octaveRadii = {
-      3: window.innerWidth < 768 ? 100 : 150,
-      4: window.innerWidth < 768 ? 160 : 250,
-      5: window.innerWidth < 768 ? 220 : 350
-    };
-
     this.currentTempo = 2.0;
 
     this.updateScale();
@@ -108,26 +103,29 @@ export class EtherealPlayer {
   updateScale() {
     const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
     
-    // Generate scale notes for all octaves
-    this.homeNotes = [3, 4, 5].map(octave => `${this.currentRoot}${octave}`);
+    // Only use active octaves from config
+    const activeOctaves = octaveConfigs.filter(config => config.isActive);
+    
+    // Generate scale notes for active octaves
+    this.homeNotes = activeOctaves.map(config => `${this.currentRoot}${config.number}`);
     
     this.diatonicNotes = [];
     this.chromaticNotes = [];
     
-    [3, 4, 5].forEach(octave => {
+    activeOctaves.forEach(config => {
       // Generate diatonic notes (notes in the scale)
       this.majorScaleSteps.forEach(step => {
         const noteIndex = (rootIndex + step) % 12;
         const note = this.chromaticOrder[noteIndex];
-        if (note !== this.currentRoot) {  // Skip root note as it's in homeNotes
-          this.diatonicNotes.push(`${note}${octave}`);
+        if (note !== this.currentRoot) {
+          this.diatonicNotes.push(`${note}${config.number}`);
         }
       });
 
-      // Generate chromatic notes (notes not in the scale)
+      // Generate chromatic notes
       this.chromaticOrder.forEach((note, index) => {
         if (!this.majorScaleSteps.includes((12 + index - rootIndex) % 12)) {
-          this.chromaticNotes.push(`${note}${octave}`);
+          this.chromaticNotes.push(`${note}${config.number}`);
         }
       });
     });
@@ -158,24 +156,43 @@ export class EtherealPlayer {
   }
 
   getRandomNote(): string {
+    // Get active octaves and their probabilities
+    const activeOctaves = octaveConfigs.filter(config => config.isActive);
+    
+    // Normalize probabilities to sum to 1
+    const totalProb = activeOctaves.reduce((sum, config) => sum + config.probability, 0);
+    const normalizedProbs = activeOctaves.map(config => config.probability / totalProb);
+    
+    // Select an octave based on probability
+    const rand = Math.random();
+    let cumProb = 0;
+    let selectedOctave = activeOctaves[0];
+    
+    for (let i = 0; i < normalizedProbs.length; i++) {
+      cumProb += normalizedProbs[i];
+      if (rand <= cumProb) {
+        selectedOctave = activeOctaves[i];
+        break;
+      }
+    }
+
     if (this.playOnlyDiatonic) {
       const random = Math.random() * 100;
       
       if (random < 20) {  // 20% chance for root note/chord
         const playChord = Math.random() < 0.25;
         if (playChord) {
-          const octave = Math.floor(Math.random() * 3) + 3;
-          const rootNote = `${this.currentRoot}${octave}`;
+          const rootNote = `${this.currentRoot}${selectedOctave.number}`;
           const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
           const intervals = this.chordTypes[this.currentMode][0];
           
           const chordNotes = intervals.map(interval => {
             const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${octave}`;
+            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
           });
           
           chordNotes.forEach((note, i) => {
-            setTimeout(() => this.playNote(note), i * 30);
+            setTimeout(() => this.playNote(note, 0.5, true), i * 30);
           });
           return rootNote;
         }
@@ -184,14 +201,13 @@ export class EtherealPlayer {
         const scaleDegree = 1 + Math.floor(Math.random() * (this.majorScaleSteps.length - 1));
         const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
         const noteIndex = (rootIndex + this.majorScaleSteps[scaleDegree]) % 12;
-        const octave = 3 + Math.floor(Math.random() * 3);
-        const note = `${this.chromaticOrder[noteIndex]}${octave}`;
+        const note = `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
         
         if (Math.random() < 0.25) {
           const intervals = this.chordTypes[this.currentMode][scaleDegree];
           const chordNotes = intervals.map(interval => {
             const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${octave}`;
+            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
           });
           
           chordNotes.forEach((note, i) => {
@@ -206,14 +222,13 @@ export class EtherealPlayer {
       if (random < 20) {  // 20% chance for root note/chord
         const playChord = Math.random() < 0.25;
         if (playChord) {
-          const octave = Math.floor(Math.random() * 3) + 3;
-          const rootNote = `${this.currentRoot}${octave}`;
+          const rootNote = `${this.currentRoot}${selectedOctave.number}`;
           const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
           const intervals = this.chordTypes[this.currentMode][0];
           
           const chordNotes = intervals.map(interval => {
             const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${octave}`;
+            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
           });
           
           chordNotes.forEach((note, i) => {
@@ -228,7 +243,6 @@ export class EtherealPlayer {
         // Add chord playing for diatonic notes
         if (Math.random() < 0.25) {
           const baseNote = note.replace(/[0-9]/g, '');
-          const octave = parseInt(note.match(/\d+/)?.[0] || '4');
           const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
           const noteIndex = this.chromaticOrder.indexOf(baseNote);
           
@@ -241,7 +255,7 @@ export class EtherealPlayer {
             const intervals = this.chordTypes[this.currentMode][scaleDegree];
             const chordNotes = intervals.map(interval => {
               const chordNoteIndex = (rootIndex + interval) % 12;
-              return `${this.chromaticOrder[chordNoteIndex]}${octave}`;
+              return `${this.chromaticOrder[chordNoteIndex]}${selectedOctave.number}`;
             });
             
             chordNotes.forEach((note, i) => {
@@ -272,39 +286,36 @@ export class EtherealPlayer {
     oscillator.type = 'sine';
     oscillator.frequency.value = this.getFrequency(note);
     
-    // Get octave from note
+    // Get octave config for this note
     const octave = parseInt(note.match(/\d+/)?.[0] || '4');
+    const octaveConfig = octaveConfigs.find(config => config.number === octave);
     
-    // Reduce volume more at higher tempos
+    if (!octaveConfig?.isActive) return;  // Don't play inactive octaves
+    
+    // Use config values for volume and envelope
     const tempoFactor = Math.max(0.3, 1.0 - (this.currentTempo - 1.0) * 0.2);
-    let maxVolume = isChordNote ? 0.05 * tempoFactor : 0.3 * tempoFactor;
-    
-    // Reduce volume for higher octaves
-    if (octave === 5) {
-      maxVolume *= 0.75;  // 75% volume for highest octave
-    }
-    
-    // Faster attack and release for higher tempos
-    const attackTime = Math.min(0.05, 0.1 / this.currentTempo);
-    const releaseTime = Math.min(0.2, duration / this.currentTempo);
+    const maxVolume = isChordNote 
+      ? octaveConfig.volume * 0.05 * tempoFactor 
+      : octaveConfig.volume * 0.3 * tempoFactor;
     
     gainNode.gain.setValueAtTime(0, now);
-    gainNode.gain.linearRampToValueAtTime(maxVolume, now + attackTime);
-    gainNode.gain.linearRampToValueAtTime(0.001, now + duration - releaseTime);
+    gainNode.gain.linearRampToValueAtTime(maxVolume, now + octaveConfig.attack);
+    gainNode.gain.linearRampToValueAtTime(0.001, now + duration - octaveConfig.release);
     
     oscillator.connect(gainNode);
     gainNode.connect(this.mainGainNode);
     
+    // Add delay if specified
+    const startTime = now + (octaveConfig.noteDelay || 0);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + duration);
+
     this.activeOscillators.push(oscillator);
     this.activeGainNodes.push(gainNode);
-    
-    oscillator.start(now);
-    oscillator.stop(now + duration);
 
-    // Create the visual bubble
-    this.createBubble(note);
+    // Create the visual bubble with config values
+    this.createBubble(note, octaveConfig);
 
-    // Clean up after the note is done
     setTimeout(() => {
       const index = this.activeOscillators.indexOf(oscillator);
       if (index > -1) {
@@ -327,18 +338,15 @@ export class EtherealPlayer {
     });
   }
 
-  createBubble(note: string) {
+  createBubble(note: string, octaveConfig: OctaveConfig) {
     const spaceElement = document.getElementById('space');
     if (!spaceElement) return;
 
     const bounds = spaceElement.getBoundingClientRect();
     const baseNote = note.slice(0, -1);  // Remove octave number
-    const octave = parseInt(note.match(/\d+/)?.[0] || '4');
     
     const angle = this.notePositions[baseNote];
-    
-    const baseRadius = this.octaveRadii[octave];
-    const radius = baseRadius;
+    const radius = window.innerWidth < 768 ? octaveConfig.mobileRadius : octaveConfig.radius;
     
     const centerX = bounds.width / 2;
     const centerY = bounds.height / 2;
@@ -347,9 +355,7 @@ export class EtherealPlayer {
     const x = centerX + radius * Math.cos(radian);
     const y = centerY + radius * Math.sin(radian);
     
-    const baseSize = window.innerWidth < 768 ? 24 : 32;
-    const sizeMultiplier = 1 - ((octave - 3) * 0.1);
-    const size = baseSize * sizeMultiplier;
+    const size = octaveConfig.bubbleSize;
     
     if (
       x - size/2 < 0 || 
@@ -362,6 +368,7 @@ export class EtherealPlayer {
     
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
+    bubble.style.opacity = octaveConfig.bubbleOpacity.toString();
     
     if (baseNote === this.currentRoot) {
       bubble.classList.add('root-note');
@@ -402,7 +409,9 @@ export class EtherealPlayer {
       }
     }
     
-    this.createRipple(x, y);
+    if (octaveConfig.rippleEffect) {
+      this.createRipple(x, y);
+    }
     
     bubble.style.width = `${size}px`;
     bubble.style.height = `${size}px`;
@@ -501,10 +510,13 @@ export class EtherealPlayer {
   }
 
   playScale() {
-    const octave = 4;
+    // Use middle octave from config
+    const middleOctaveConfig = octaveConfigs.find(config => config.number === 4);
+    if (!middleOctaveConfig?.isActive) return 0;  // Return if middle octave is inactive
+    
     const scaleNotes = this.majorScaleSteps.map(step => {
       const noteIndex = (this.chromaticOrder.indexOf(this.currentRoot) + step) % 12;
-      return `${this.chromaticOrder[noteIndex]}${octave}`;
+      return `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
     });
 
     // Clear any existing timeouts first
@@ -524,7 +536,7 @@ export class EtherealPlayer {
       const intervals = this.chordTypes[this.currentMode][0];
       const chordNotes = intervals.map(interval => {
         const noteIndex = (rootIndex + interval) % 12;
-        return `${this.chromaticOrder[noteIndex]}${octave}`;
+        return `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
       });
       
       chordNotes.forEach(note => {
@@ -547,11 +559,10 @@ export class EtherealPlayer {
   }
 
   updateRadii() {
-    this.octaveRadii = {
-      3: window.innerWidth < 768 ? 100 : 150,
-      4: window.innerWidth < 768 ? 160 : 250,
-      5: window.innerWidth < 768 ? 220 : 350
-    };
+    // Update radii based on window size
+    octaveConfigs.forEach(config => {
+      config.radius = window.innerWidth < 768 ? config.mobileRadius : config.radius;
+    });
   }
 
   checkAndApplyChanges(newSettings: PlayerSettings) {
@@ -694,4 +705,16 @@ export class EtherealPlayer {
 
     return buffer;
   }
-} 
+}
+
+
+// let maxVolume = isChordNote ? 0.05 * tempoFactor : 0.3 * tempoFactor;
+    
+// // Reduce volume for higher octaves
+// if (octave === 5) {
+//   maxVolume *= 0.75;  // 75% volume for highest octave
+// }
+
+// // Faster attack and release for higher tempos
+// const attackTime = Math.min(0.05, 0.1 / this.currentTempo);
+// const releaseTime = Math.min(0.2, duration / this.currentTempo);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { EtherealPlayer } from '../app/lib/EtherealPlayer';
+import { EtherealPlayer } from '../lib/EtherealPlayer';
 import '@/app/styles/slider.css';
 import MobileControls from './MusicControls/MobileControls';
 import DesktopControls from './MusicControls/DesktopControls';
@@ -200,63 +200,93 @@ export default function EtherealSpace({ showRecordingControls = false }: Etherea
           </div>
         </div>
 
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
-          <div className="flex gap-4">
-            <button
-              onClick={handlePlayToggle}
-              className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
-            >
-              <div className="absolute inset-0">
-                <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
-              </div>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <div className="absolute inset-0 bg-white/20" />
-                <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
-              </div>
-              <span className="relative group-hover:text-stone-700 transition-colors duration-300">Start/Stop</span>
-            </button>
+        <div className="absolute bottom-20 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-2 md:translate-y-0 translate-y-16">
+            <div className="flex gap-4">
+              <button
+                onClick={handlePlayToggle}
+                className="bg-white/20 px-8 py-3 rounded-lg md:text-stone-500 text-stone-700 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
+              >
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
+                </div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="absolute inset-0 bg-white/20" />
+                  <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
+                </div>
+                <span className="relative md:group-hover:text-stone-700 group-hover:text-stone-800 transition-colors duration-300">Start/Stop</span>
+              </button>
 
-            {showRecordingControls && (
-              <>
-                <button
-                  onClick={handleRecordToggle}
-                  className={`bg-white/20 px-8 py-3 rounded-lg transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 ${
-                    isRecording ? 'border-red-400/50 text-red-500' : 'border-stone-300/30 text-stone-500'
-                  }`}
-                >
-                  <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
-                  </div>
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="absolute inset-0 bg-white/20" />
-                    <div className={`absolute inset-0 border-2 rounded-lg transition-all duration-300 ${
-                      isRecording ? 'border-red-500/40' : 'border-stone-400/40'
-                    }`} />
-                  </div>
-                  <span className="relative group-hover:text-stone-700 transition-colors duration-300">
-                    {isRecording ? 'Stop Recording' : 'Record'}
-                  </span>
-                </button>
-
-                {recordedAudio && !isRecording && (
+              {showRecordingControls && (
+                <>
                   <button
-                    onClick={handleDownload}
-                    className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
+                    onClick={handleRecordToggle}
+                    className={`bg-white/20 px-8 py-3 rounded-lg transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 ${
+                      isRecording ? 'border-red-400/50 text-red-500' : 'border-stone-300/30 text-stone-500'
+                    }`}
                   >
                     <div className="absolute inset-0">
                       <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
                     </div>
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                       <div className="absolute inset-0 bg-white/20" />
-                      <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
+                      <div className={`absolute inset-0 border-2 rounded-lg transition-all duration-300 ${
+                        isRecording ? 'border-red-500/40' : 'border-stone-400/40'
+                      }`} />
                     </div>
                     <span className="relative group-hover:text-stone-700 transition-colors duration-300">
-                      Download
+                      {isRecording ? 'Stop Recording' : 'Record'}
                     </span>
                   </button>
-                )}
-              </>
-            )}
+
+                  {recordedAudio && !isRecording && (
+                    <button
+                      onClick={handleDownload}
+                      className="bg-white/20 px-8 py-3 rounded-lg text-stone-500 transition-all duration-300 backdrop-blur-[2px] text-base relative group overflow-hidden border-2 border-stone-300/30"
+                    >
+                      <div className="absolute inset-0">
+                        <div className="absolute inset-0 bg-gradient-to-r from-stone-300/10 via-white/20 to-stone-300/10" />
+                      </div>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                        <div className="absolute inset-0 bg-white/20" />
+                        <div className="absolute inset-0 border-2 border-stone-400/40 rounded-lg transition-all duration-300" />
+                      </div>
+                      <span className="relative group-hover:text-stone-700 transition-colors duration-300">
+                        Download
+                      </span>
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Mobile tempo controls */}
+            <div className="flex items-center justify-center gap-4 md:hidden mt-2">
+              <button 
+                onClick={() => handleTempoChange(Math.max(0.5, tempoValue - 0.1))}
+                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              
+              <div className="flex flex-col items-center min-w-[50px]">
+                <div className="text-base font-medium text-stone-500">
+                  {tempoValue.toFixed(1)}
+                </div>
+                <div className="text-[10px] text-stone-500 -mt-0.5">beats/s</div>
+              </div>
+              
+              <button 
+                onClick={() => handleTempoChange(Math.min(3.0, tempoValue + 0.1))}
+                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

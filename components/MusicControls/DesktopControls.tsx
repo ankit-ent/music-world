@@ -1,6 +1,7 @@
 'use client';
 
 import { EtherealPlayerType } from '@/types/EtherealPlayer';
+import { HomeIcon, MusicalNoteIcon, SwatchIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface DesktopControlsProps {
   player: EtherealPlayerType | null;
@@ -29,7 +30,10 @@ export default function DesktopControls({
       {/* Desktop controls - left */}
       <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm p-5 rounded-2xl flex-col gap-12 items-center border border-white/20 w-[120px] hidden md:flex z-20">
         <div className="flex flex-col gap-3 w-full items-center">
-          <label className="text-sm font-medium text-stone-600">Home Key</label>
+          <label className="text-sm font-medium text-stone-600 flex flex-col items-center gap-2">
+            <HomeIcon className="w-5 h-5 text-stone-500" />
+            <span>Home Key</span>
+          </label>
           <select
             onChange={onRootChange}
             value={currentRoot}
@@ -44,7 +48,10 @@ export default function DesktopControls({
         </div>
 
         <div className="flex flex-col gap-3 items-center">
-          <label className="text-sm font-medium text-stone-600">Tempo</label>
+          <label className="text-sm font-medium text-stone-600 flex flex-col items-center gap-2">
+            <ClockIcon className="w-5 h-5 text-stone-500" />
+            <span>Tempo</span>
+          </label>
           <div className="flex flex-col items-center gap-3">
             <button 
               onClick={() => onTempoChange(Math.min(3.0, tempoValue + 0.1))}
@@ -74,7 +81,10 @@ export default function DesktopControls({
       {/* Desktop controls - right */}
       <div className="absolute right-8 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm p-5 rounded-2xl flex-col gap-12 items-center border border-white/20 w-[120px] hidden md:flex z-20">
         <div className="flex flex-col gap-3 w-full items-center">
-          <label className="text-sm font-medium text-stone-600">Mode</label>
+          <label className="text-sm font-medium text-stone-600 flex flex-col items-center gap-2">
+            <MusicalNoteIcon className="w-5 h-5 text-stone-500" />
+            <span>Mode</span>
+          </label>
           <select
             onChange={onModeChange}
             value={currentMode}
@@ -89,8 +99,9 @@ export default function DesktopControls({
         </div>
 
         <div className="flex flex-col gap-3 w-full items-center">
-          <label className="text-sm font-medium text-stone-600 text-center">
-            Add more<br />Colours?
+          <label className="text-sm font-medium text-stone-600 flex flex-col items-center gap-2">
+            <SwatchIcon className="w-5 h-5 text-stone-500" />
+            <span className="text-center">More Colours?</span>
           </label>
           <select
             onChange={onDiatonicModeChange}
