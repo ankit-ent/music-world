@@ -1,6 +1,5 @@
 'use client'
 
-import ExplanationBox from '@/components/ExplanationBox';
 import Footer from '@/components/Footer';
 
 export default function GuidePage() {

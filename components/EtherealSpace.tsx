@@ -164,14 +164,12 @@ export default function EtherealSpace({ showRecordingControls = false }: Etherea
       >
         <MobileControls
           player={player}
-          tempoValue={tempoValue}
           currentRoot={currentRoot}
           currentMode={currentMode}
           isDiatonic={isDiatonic}
           onRootChange={handleRootChange}
           onModeChange={handleModeChange}
           onDiatonicModeChange={handleDiatonicModeChange}
-          onTempoChange={handleTempoChange}
         />
 
         <DesktopControls

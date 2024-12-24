@@ -58,8 +58,29 @@ export default function Home() {
             <div className="space-y-8">
               <p className="text leading-relaxed text-stone-600">
                 While a more poetic definition might be that music is the language of emotion, 
-                let&apos;s try to understand it in a more technical way.
-                Music is just a collection of sounds arranged in a way that makes sense to us.
+                the simplest scientific definition I could find was: <strong>&ldquo;Music is the arrangement of sounds in time&rdquo;</strong>
+                <br /><br />
+                And the controls in the above visualization control exactly these three things; <strong>arrangement</strong>, <strong>sounds</strong>, and <strong>time</strong>. 
+                <br /><br />
+                {/* Apart from this, music is composed of three pillars: 
+                <span className="relative inline-block px-1">
+                  <span className="absolute inset-0 bg-yellow-100/50 rounded" style={{ transform: 'rotate(-2deg)' }} />
+                  <span className="relative">rhythm (time)</span>
+                </span>, 
+                <span className="relative inline-block px-1">
+                  <span className="absolute inset-0 bg-blue-100/50 rounded" style={{ transform: 'rotate(1deg)' }} />
+                  <span className="relative">melody (words or sentences of music)</span>
+                </span>, and 
+                <span className="relative inline-block px-1">
+                  <span className="absolute inset-0 bg-rose-100/50 rounded" style={{ transform: 'rotate(-1deg)' }} />
+                  <span className="relative">harmony (feelings)</span>
+                </span>. */}
+                Here&apos;s a <a 
+                  href="https://www.youtube.com/watch?v=_S6Z31v9XNQ" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-blue-600 hover:text-blue-800 underline"
+                >link of Jacob Collier explaining what music is</a> (in just 2 min) better than I ever could.
               </p>
             </div>
 
@@ -68,7 +89,7 @@ export default function Home() {
 
             {/* Home Key Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-6 text-stone-700">"Why am I learning alphabets again? And what is this Home key?"</h3>
+              <h3 className="text-2xl font-serif mb-6 text-stone-700">&ldquo;Why am I learning alphabets again? And what is this Home key?&rdquo;</h3>
               <div className="space-y-4">
                 <p className="text-stone-500 font-semibold text-lg">--&gt; Alphabets</p>
                 
@@ -76,7 +97,7 @@ export default function Home() {
                 <ExplanationBox>
                   <p className="text-stone-600">
                     Well, in all truthfulness, there are infinite sounds, each having their own sound frequencies. Sounds made by us, birds, trees, even wind. A lot of sounds aren&apos;t even audible to the human ear. But to make life easier, many cultures have standardized <span className="font-semibold text-stone-700">12 sounds</span> for music, which are represented by alphabets, 
-                    A through G (there are some with '#' or '♭', but essentially they are just a weird way of naming these sounds).
+                    A through G (there are some with &lsquo;#&rsquo; or &lsquo;♭&rsquo;, but essentially they are just a weird way of naming these sounds).
                   </p>
                   <br />
                   <p className="text-stone-600">
@@ -168,7 +189,7 @@ export default function Home() {
 
             {/* Scales Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-4 text-stone-700">"Alright. But where did major, minor come from?"</h3>
+              <h3 className="text-2xl font-serif mb-4 text-stone-700">&ldquo;Alright. But where did major, minor come from?&rdquo;</h3>
               <div className="space-y-4">
                 <p className="text-stone-600">
                   Music is the arrangement of sounds in time. So, the arrangement (and also picking the notes to play) part comes from the 
@@ -176,7 +197,7 @@ export default function Home() {
                     <span className="absolute inset-0 bg-purple-100/50 rounded" style={{ transform: 'rotate(-1deg)' }} />
                     <span className="relative">mode</span>
                   </span>
-                  . Major, minor, lydian (there are a lot more) are types of modes(also called "scales"), having their own set of rules to arranging sounds. Different arrangements of sounds evoke different  
+                  . Major, minor, lydian (there are a lot more) are types of modes(also called scales), having their own set of rules to arranging sounds. Different arrangements of sounds evoke different  
                   <span className="font-medium text-stone-800"> feelings</span>.
                 </p>
                 <div className="mt-6 space-y-4">
@@ -203,7 +224,7 @@ export default function Home() {
 
             {/* Notes Selection Section */}
             <div className="space-y-8">
-              <h3 className="text-2xl font-serif mb-4 text-stone-700">"What does adding colours mean?"</h3>
+              <h3 className="text-2xl font-serif mb-4 text-stone-700">&ldquo;What does adding colours mean?&rdquo;</h3>
               <div className="space-y-4">
                 <ExplanationBox>
                   <p className="text-stone-600">
