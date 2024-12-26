@@ -28,8 +28,7 @@ export default function Header() {
 
       {/* Desktop nav */}
       <nav className="hidden md:flex gap-6 text-sm text-stone-500">
-        <Link href="/#what-is-music" className="hover:text-stone-800">What is Music?</Link>
-        <Link href="/guide" className="hover:text-stone-800">Visualization Guide</Link>
+        <Link href="/#what-is-music" className="hover:text-stone-800">Guide</Link>
       </nav>
 
       {/* Mobile menu button */}
@@ -55,14 +54,7 @@ export default function Header() {
               className="hover:text-stone-900 transition-colors" 
               onClick={() => setIsMenuOpen(false)}
             >
-              What is Music?
-            </Link>
-            <Link 
-              href="/guide" 
-              className="hover:text-stone-900 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Visualization Guide
+              Guide
             </Link>
           </div>
         </nav>

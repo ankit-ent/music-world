@@ -164,12 +164,14 @@ export default function EtherealSpace({ showRecordingControls = false }: Etherea
       >
         <MobileControls
           player={player}
+          tempoValue={tempoValue}
           currentRoot={currentRoot}
           currentMode={currentMode}
           isDiatonic={isDiatonic}
           onRootChange={handleRootChange}
           onModeChange={handleModeChange}
           onDiatonicModeChange={handleDiatonicModeChange}
+          onTempoChange={handleTempoChange}
         />
 
         <DesktopControls
@@ -198,8 +200,35 @@ export default function EtherealSpace({ showRecordingControls = false }: Etherea
           </div>
         </div>
 
-        <div className="absolute bottom-20 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4">
+        <div className="absolute bottom-24 md:bottom-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4">
           <div className="flex flex-col items-center gap-2 md:translate-y-0 translate-y-16">
+            <div className="flex items-center justify-center gap-4 md:hidden mb-2">
+              <button 
+                onClick={() => handleTempoChange(Math.max(0.5, tempoValue - 0.1))}
+                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              
+              <div className="flex flex-col items-center min-w-[50px]">
+                <div className="text-base font-medium text-stone-500">
+                  {tempoValue.toFixed(1)}
+                </div>
+                <div className="text-[10px] text-stone-500 -mt-0.5">beats/s</div>
+              </div>
+              
+              <button 
+                onClick={() => handleTempoChange(Math.min(3.0, tempoValue + 0.1))}
+                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+
             <div className="flex gap-4">
               <button
                 onClick={handlePlayToggle}
@@ -256,34 +285,6 @@ export default function EtherealSpace({ showRecordingControls = false }: Etherea
                   )}
                 </>
               )}
-            </div>
-
-            {/* Mobile tempo controls */}
-            <div className="flex items-center justify-center gap-4 md:hidden mt-2">
-              <button 
-                onClick={() => handleTempoChange(Math.max(0.5, tempoValue - 0.1))}
-                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-              </button>
-              
-              <div className="flex flex-col items-center min-w-[50px]">
-                <div className="text-base font-medium text-stone-500">
-                  {tempoValue.toFixed(1)}
-                </div>
-                <div className="text-[10px] text-stone-500 -mt-0.5">beats/s</div>
-              </div>
-              
-              <button 
-                onClick={() => handleTempoChange(Math.min(3.0, tempoValue + 0.1))}
-                className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </button>
             </div>
           </div>
         </div>

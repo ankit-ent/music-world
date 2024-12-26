@@ -5,21 +5,25 @@ import { HomeIcon, MusicalNoteIcon, SwatchIcon } from '@heroicons/react/24/outli
 
 interface MobileControlsProps {
   player: EtherealPlayerType | null;
+  tempoValue: number;
   currentRoot: string;
   currentMode: string;
   isDiatonic: boolean;
   onRootChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onDiatonicModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onTempoChange: (newTempo: number) => void;
 }
 
 export default function MobileControls({
+  tempoValue,
   currentRoot,
   currentMode,
   isDiatonic,
   onRootChange,
   onModeChange,
   onDiatonicModeChange,
+  onTempoChange,
 }: MobileControlsProps) {
   return (
     <div className="absolute top-0 left-0 right-0 px-2 mt-24 flex-col gap-3 md:hidden z-20">
