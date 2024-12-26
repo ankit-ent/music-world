@@ -16,14 +16,12 @@ interface MobileControlsProps {
 }
 
 export default function MobileControls({
-  tempoValue,
   currentRoot,
   currentMode,
   isDiatonic,
   onRootChange,
   onModeChange,
-  onDiatonicModeChange,
-  onTempoChange,
+  onDiatonicModeChange
 }: MobileControlsProps) {
   return (
     <div className="absolute top-0 left-0 right-0 px-2 mt-24 flex-col gap-3 md:hidden z-20">

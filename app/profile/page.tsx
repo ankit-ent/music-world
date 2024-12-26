@@ -161,7 +161,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="space-y-2">
                           <p className="text-stone-600">A notebook, stationery, and uniform store for school students</p>
-                          <p className="text-stone-400 text-xs italic"> - A small attempt at making a shopify store for my Dad's business. Quickly realised need more high margin items for it, but haven't gotten aroudn to what that could be</p>
+                          <p className="text-stone-400 text-xs italic"> - A small attempt at making a shopify store for my Dad&apos;s business. Quickly realised need more high margin items for it, but haven&apos;t gotten around to what that could be</p>
                         </div>
                         <div className="flex gap-2">
                           <span className="text-xs text-yellow-800 px-2 py-0.5 rounded-full bg-yellow-100">

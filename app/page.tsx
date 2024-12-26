@@ -332,7 +332,7 @@ export default function Home() {
                           </div>
                           <div>
                             <h4 className="text-lg font-medium text-stone-700">Non-Scale Notes</h4>
-                            <p className="text-stone-600">Notes outside the chosen scale, shown as colorful dots. These appear when "Add Colours" is enabled, adding more variety and complexity to the music.</p>
+                            <p className="text-stone-600">Notes outside the chosen scale, shown as colourful dots. These appear when &ldquo;Add Colours&ldquo; is enabled, adding more variety and complexity to the music.</p>
                           </div>
                         </div>
                       </div>
@@ -342,8 +342,8 @@ export default function Home() {
                     <div className="p-6 bg-white rounded-lg shadow-sm">
                       <h3 className="text-xl text-stone-700 mb-4">The Musical Space</h3>
                         <p className="text-stone-600">
-                          Frequency of the 'A' note is 440 Hz. Interestingly enough, the sound wave of frequency 880 Hz is also called 'A'. This is because the waves are very similar. They are just vibrating twice as fast, but apart from that they superimpose perfectly. Hence, even to our ears they sound similar.
-                          Similarly, 220 Hz is also an 'A note, it just vibrates half as fast. <br />
+                          Frequency of the &lsquo;A&lsquo; note is 440 Hz. Interestingly enough, the sound wave of frequency 880 Hz is also called &lsquo;A&lsquo;. This is because the waves are very similar. They are just vibrating twice as fast, but apart from that they superimpose perfectly. Hence, even to our ears they sound similar.
+                          Similarly, 220 Hz is also an &lsquo;A&lsquo; note, it just vibrates half as fast. <br />
                           All in all, this means that musical notes are modular, or they repeat in a circle, just like a clock. After G# comes A, and vice versa.
                         </p>
                         <br />
