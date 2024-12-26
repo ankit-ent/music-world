@@ -33,7 +33,7 @@ export default function ProfilePage() {
                   <h1 className="text-2xl font-serif text-stone-800 mb-2">Ankit Sharma</h1>
                   <p className="text-stone-600">
                     Just a weird mix of wanting to learn and do everything, but in the end barely getting anything done.
-                    Forever a computer science and music nerd. Sometimes travelling around or trekking mountains.
+                    Forever a computer science and music nerd. Occasionally trekking mountains or swimming in seas.
                   </p>
                 </div>
               </div>
