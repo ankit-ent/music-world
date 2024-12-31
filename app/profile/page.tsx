@@ -33,7 +33,7 @@ export default function ProfilePage() {
                   <h1 className="text-2xl font-serif text-stone-800 mb-2">Ankit Sharma</h1>
                   <p className="text-stone-600">
                     Just a weird mix of wanting to learn and do everything, but in the end barely getting anything done.
-                    Forever a computer science and music nerd. Occasionally trekking mountains or swimming in seas.
+                    A computer science and music nerd. Occasionally trekking mountains or swimming in seas.
                   </p>
                 </div>
               </div>
@@ -52,6 +52,9 @@ export default function ProfilePage() {
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">Wavy Lines</h3>
+                          <svg className="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
                           <Link 
                             href="https://wavylines.in" 
                             className="text-stone-700 bg-stone-200 px-2 py-0.5 rounded text-sm hover:bg-stone-300 transition-colors"
@@ -63,18 +66,15 @@ export default function ProfilePage() {
                           <p className="text-stone-600">An experimental website made primarily for music</p>
                           <p className="text-stone-400 text-xs italic"> - A more data structures and algorithms focused website</p>
                         </div>
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                           <span className="text-xs text-stone-600 px-2 py-0.5 rounded-full bg-stone-100">
                             music theory
                           </span>
                           <span className="text-xs text-stone-600 px-2 py-0.5 rounded-full bg-stone-100">
                             maths
                           </span>
-                        </div>
+                        </div> */}
                       </div>
-                      <svg className="w-4 h-4 text-stone-400 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
                     </div>
                   </div>
 
@@ -84,30 +84,22 @@ export default function ProfilePage() {
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">Nimble</h3>
+                          <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
                           <Link 
                             href="https://gonimble.in" 
                             className="text-white bg-blue-400 px-2 py-0.5 rounded text-sm hover:bg-blue-500 transition-colors"
                           >
                             gonimble.in
                           </Link>
-                          <span className="text-xs text-stone-500 px-2 py-0.5 rounded-full bg-stone-100">wip</span>
                         </div>
                         <div className="space-y-2">
                           <p className="text-stone-600">A marketplace platform helping schools and companies connect with vendors across India</p>
-                          <p className="text-stone-400 text-xs italic"> - Working with filters, more intricate backends and different views for different users</p>
-                        </div>
-                        <div className="flex gap-2">
-                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
-                            search & filter
-                          </span>
-                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
-                            user types & views
-                          </span>
+                          <p className="text-stone-400 text-xs italic"> - A very backend heavy project, with a well defined design system</p>
                         </div>
                       </div>
-                      <svg className="w-4 h-4 text-blue-400 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
+                      <span className="text-xs text-stone-500 px-2 py-0.5 rounded-full bg-stone-100">wip</span>
                     </div>
                   </div>
 
@@ -117,8 +109,11 @@ export default function ProfilePage() {
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">SchoolPages</h3>
+                          <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
                           <Link 
-                            href="https://school-pages.com" 
+                            href="https://school-page.com" 
                             className="text-white bg-emerald-600 px-2 py-0.5 rounded text-sm hover:bg-emerald-700 transition-colors"
                           >
                             school-pages.com
@@ -128,7 +123,7 @@ export default function ProfilePage() {
                           <p className="text-stone-600">An LLM Assistant for teachers and schools. Helps make lesson plans, questions, and even provides an NCF Assistant</p>
                           <p className="text-stone-400 text-xs italic"> - First attempt at making a website truly from scratch, backend and frontend. And also working with LLM apis</p>
                         </div>
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                           <span className="text-xs text-emerald-600 px-2 py-0.5 rounded-full bg-emerald-50">
                             backend & frontend
                           </span>
@@ -138,11 +133,8 @@ export default function ProfilePage() {
                           <span className="text-xs text-emerald-600 px-2 py-0.5 rounded-full bg-emerald-50">
                             LLM apis
                           </span>
-                        </div>
+                        </div> */}
                       </div>
-                      <svg className="w-4 h-4 text-emerald-600 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
                     </div>
                   </div>
 
@@ -152,6 +144,9 @@ export default function ProfilePage() {
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">Dots & Grids</h3>
+                          <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
                           <Link 
                             href="https://dotsandgrids.com" 
                             className="text-yellow-950 bg-yellow-200 px-2 py-0.5 rounded text-sm hover:bg-amber-300 transition-colors"
@@ -161,17 +156,14 @@ export default function ProfilePage() {
                         </div>
                         <div className="space-y-2">
                           <p className="text-stone-600">A notebook, stationery, and uniform store for school students</p>
-                          <p className="text-stone-400 text-xs italic"> - A small attempt at making a shopify store for my Dad&apos;s business. Quickly realised need more high margin items for it, but haven&apos;t gotten around to what that could be</p>
+                          <p className="text-stone-400 text-xs italic"> - An attempt at making a shopify store for my Dad&apos;s business. Quickly realised need more high margin items for it, but haven&apos;t gotten around to what that could be</p>
                         </div>
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                           <span className="text-xs text-yellow-800 px-2 py-0.5 rounded-full bg-yellow-100">
                             shopify
                           </span>
-                        </div>
+                        </div> */}
                       </div>
-                      <svg className="w-4 h-4 text-amber-400 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
                     </div>
                   </div>
 
@@ -181,6 +173,9 @@ export default function ProfilePage() {
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-medium">CodeWorld</h3>
+                          <svg className="w-4 h-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
                           <Link 
                             href="https://mycodeworld.in" 
                             className="text-white bg-blue-700 px-2 py-0.5 rounded text-sm hover:bg-blue-800 transition-colors"
@@ -190,20 +185,17 @@ export default function ProfilePage() {
                         </div>
                         <div className="space-y-2">
                           <p className="text-stone-600">A computer course curriculum for schools</p>
-                          <p className="text-stone-400 text-xs italic"> - A go at wordpress, and coming up with some sort of design system</p>
+                          <p className="text-stone-400 text-xs italic"> - A go at wordpress</p>
                         </div>
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                           <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
                             wordpress
                           </span>
                           <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
                             design systems
                           </span>
-                        </div>
+                        </div> */}
                       </div>
-                      <svg className="w-4 h-4 text-blue-700 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
                     </div>
                   </div>
                 </div>
