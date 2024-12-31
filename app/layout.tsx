@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Caveat, Noto_Serif } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import Script from 'next/script';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -56,12 +55,7 @@ export default function RootLayout({
   return (
     <html className="h-full">
       <head>
-        <Script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="40b0b6f3-2faa-46fb-8c23-64f597f0414b"
-          strategy="afterInteractive"
-        />
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="40b0b6f3-2faa-46fb-8c23-64f597f0414b"></script>
       </head>
       <body className={`${inter.className} ${caveat.variable} ${notoSerif.variable} overflow-auto`}>
         <Header />
