@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import { useState } from 'react';
 import ExplanationBox from '@/components/ExplanationBox';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import ScaleVisualizer from '@/components/ScaleVisualizer';
 
 const CollapsibleInfo = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,7 +17,7 @@ const CollapsibleInfo = () => {
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full text-left p-4 flex items-center justify-between group"
         >
-          <p className="text-stone-100 font-serif pr-6 text-sm sm:text-base">
+          <p className="text-stone-100 font-sans pr-6 text-sm sm:text-base">
             Wait. Does that mean different songs have different home notes? And how does our brain even know what the home note is for that particular song?
           </p>
           <svg 
@@ -113,6 +114,8 @@ export default function Home() {
                       </p>
                     </ExplanationBox>
 
+
+
                     <div className="space-y-4">
                       {/* Notes display */}
                       <div className="flex items-center justify-center p-6 bg-white/70 rounded-lg backdrop-blur-sm shadow-sm">
@@ -181,6 +184,20 @@ export default function Home() {
                           <span className="relative">home note</span>
                         </span>.
                       </p>
+                    </ExplanationBox>
+                    <ExplanationBox>
+                      <p className="text-stone-600 mb-4">
+                        Here's a practical example. Click on the notes below to hear them:
+                      </p>
+                      <ScaleVisualizer />
+                      <div className="mt-6 space-y-4">
+                        <p className="text-stone-600">
+                          In the above given notes, the <span className="font-medium text-stone-700">C note</span> is the home note. Try playing any of the notes randomly. No matter what sequence you play in, your brain would always want to end on this C note. It will always feel the most stable.
+                        </p>
+                        <p className="text-stone-500 text-sm italic">
+                          Note: Context matters a LOT in music. In the above given notes, C is the home note. But if different notes are selected than the above ones, C might not be the home note.
+                        </p>
+                      </div>
                     </ExplanationBox>
                     <p className="text-stone-600">
                       So when you select a particular home key, you are essentially saying that I want this sound to be the most stable note in this music. 
