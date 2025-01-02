@@ -187,7 +187,7 @@ export default function Home() {
                     </ExplanationBox>
                     <ExplanationBox>
                       <p className="text-stone-600 mb-4">
-                        Here's a practical example. Click on the notes below to hear them:
+                        Here&apos;s a practical example. Click on the notes below to hear them:
                       </p>
                       <ScaleVisualizer />
                       <div className="mt-6 space-y-4">

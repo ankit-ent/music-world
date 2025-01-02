@@ -2,6 +2,11 @@
 
 import { useCallback } from 'react';
 
+// Add type for WebKit prefix
+interface WebKitAudioContext extends AudioContext {
+  webkitAudioContext: typeof AudioContext;
+}
+
 const notes = [
   { note: 'C', frequency: 261.63 },
   { note: 'D', frequency: 293.66 },
@@ -14,7 +19,8 @@ const notes = [
 
 export default function ScaleVisualizer() {
   const playNote = useCallback((frequency: number) => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const AudioContextClass = window.AudioContext || (window as unknown as WebKitAudioContext).webkitAudioContext;
+    const audioContext = new AudioContextClass();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
     
