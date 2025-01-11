@@ -14,7 +14,7 @@ const notoSerif = Noto_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://wavylines.in'),
+  metadataBase: new URL('https://www.wavylines.in'),
   title: "Wavy Lines",
   description: "For some spacey music",
   keywords: ['music', 'space music', 'ambient', 'electronic music', 'wavy lines', 'music streaming'],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://wavylines.in',
+    url: 'https://www.wavylines.in',
     title: 'Wavy Lines',
     description: 'For some spacey music',
     siteName: 'Wavy Lines',
@@ -45,15 +45,6 @@ export const metadata: Metadata = {
       height: 630,
       alt: 'Wavy Lines Preview'
     }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Wavy Lines',
-    description: 'For some spacey music',
-    images: ['/twitter-image.jpg'],
-  },
-  verification: {
-    google: 'your-google-verification-code', // Add your verification code when ready
   },
   icons: {
     icon: [
@@ -94,7 +85,7 @@ export default function RootLayout({
   return (
     <html className="h-full" lang="en">
       <head>
-        <link rel="canonical" href="https://wavylines.in" />
+        <link rel="canonical" href="https://www.wavylines.in" />
         <script defer src="https://cloud.umami.is/script.js" data-website-id="40b0b6f3-2faa-46fb-8c23-64f597f0414b"></script>
       </head>
       <body className={`${inter.className} ${caveat.variable} ${notoSerif.variable} overflow-auto`}>
