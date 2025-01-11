@@ -56,7 +56,7 @@ export default function ProfilePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                           <Link 
-                            href="https://wavylines.in" 
+                            href="https://www.wavylines.in" 
                             className="text-stone-700 bg-stone-200 px-2 py-0.5 rounded text-sm hover:bg-stone-300 transition-colors"
                             target="_blank"
                             rel="external"
@@ -91,7 +91,7 @@ export default function ProfilePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                           <Link 
-                            href="https://gonimble.in" 
+                            href="https://www.gonimble.in" 
                             className="text-white bg-blue-400 px-2 py-0.5 rounded text-sm hover:bg-blue-500 transition-colors"
                             target="_blank"
                             rel="external"
@@ -119,7 +119,7 @@ export default function ProfilePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                           <Link 
-                            href="https://school-page.com" 
+                            href="https://www.school-page.com" 
                             className="text-white bg-emerald-600 px-2 py-0.5 rounded text-sm hover:bg-emerald-700 transition-colors"
                             target="_blank"
                             rel="external"
