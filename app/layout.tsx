@@ -14,8 +14,47 @@ const notoSerif = Noto_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://wavylines.in'),
   title: "Wavy Lines",
   description: "For some spacey music",
+  keywords: ['music', 'space music', 'ambient', 'electronic music', 'wavy lines', 'music streaming'],
+  authors: [{ name: 'Wavy Lines' }],
+  creator: 'Wavy Lines',
+  publisher: 'Wavy Lines',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://wavylines.in',
+    title: 'Wavy Lines',
+    description: 'For some spacey music',
+    siteName: 'Wavy Lines',
+    images: [{
+      url: '/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Wavy Lines Preview'
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wavy Lines',
+    description: 'For some spacey music',
+    images: ['/twitter-image.jpg'],
+  },
+  verification: {
+    google: 'your-google-verification-code', // Add your verification code when ready
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -53,9 +92,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html className="h-full">
+    <html className="h-full" lang="en">
       <head>
-      <script defer src="https://cloud.umami.is/script.js" data-website-id="40b0b6f3-2faa-46fb-8c23-64f597f0414b"></script>
+        <link rel="canonical" href="https://wavylines.in" />
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="40b0b6f3-2faa-46fb-8c23-64f597f0414b"></script>
       </head>
       <body className={`${inter.className} ${caveat.variable} ${notoSerif.variable} overflow-auto`}>
         <Header />
