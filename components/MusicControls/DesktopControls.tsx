@@ -1,29 +1,33 @@
 'use client';
 
-import { EtherealPlayerType } from '@/types/EtherealPlayer';
+import { EtherealPlayer } from '@/lib/EtherealPlayer';
+import { type ChordMode } from '@/lib/ModeConfig';
 import { HomeIcon, MusicalNoteIcon, SwatchIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface DesktopControlsProps {
-  player: EtherealPlayerType | null;
+  player: EtherealPlayer | null;
   tempoValue: number;
   currentRoot: string;
-  currentMode: string;
+  currentMode: ChordMode;
   isDiatonic: boolean;
+  isCustomMode?: boolean;
   onRootChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onDiatonicModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onTempoChange: (newTempo: number) => void;
+  onTempoChange: (value: number) => void;
 }
 
 export default function DesktopControls({
+  player,
   tempoValue,
   currentRoot,
   currentMode,
   isDiatonic,
+  isCustomMode = false,
   onRootChange,
   onModeChange,
   onDiatonicModeChange,
-  onTempoChange,
+  onTempoChange
 }: DesktopControlsProps) {
   return (
     <>
@@ -86,15 +90,19 @@ export default function DesktopControls({
             <span>Mode</span>
           </label>
           <select
-            onChange={onModeChange}
             value={currentMode}
+            onChange={onModeChange}
             className="w-[80px] bg-stone-600/10 px-2 py-2 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center"
           >
-            {['Major', 'Minor', 'Lydian'].map(mode => (
-              <option key={mode} value={mode} className="bg-white text-stone-700">
-                {mode}
-              </option>
-            ))}
+            {isCustomMode ? (
+              <option value="Custom">Custom</option>
+            ) : (
+              <>
+                <option value="Major">Major</option>
+                <option value="Minor">Minor</option>
+                <option value="Lydian">Lydian</option>
+              </>
+            )}
           </select>
         </div>
 

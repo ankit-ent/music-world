@@ -1,24 +1,27 @@
 'use client';
 
-import { EtherealPlayerType } from '@/types/EtherealPlayer';
+import { EtherealPlayer } from '@/lib/EtherealPlayer';
+import { type ChordMode } from '@/lib/ModeConfig';
 import { HomeIcon, MusicalNoteIcon, SwatchIcon } from '@heroicons/react/24/outline';
 
 interface MobileControlsProps {
-  player: EtherealPlayerType | null;
+  player: EtherealPlayer | null;
   tempoValue: number;
   currentRoot: string;
-  currentMode: string;
+  currentMode: ChordMode;
   isDiatonic: boolean;
+  isCustomMode?: boolean;
   onRootChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onDiatonicModeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onTempoChange: (newTempo: number) => void;
+  onTempoChange: (value: number) => void;
 }
 
 export default function MobileControls({
   currentRoot,
   currentMode,
   isDiatonic,
+  isCustomMode = false,
   onRootChange,
   onModeChange,
   onDiatonicModeChange
@@ -53,15 +56,19 @@ export default function MobileControls({
             <span>Mode</span>
           </label>
           <select
-            onChange={onModeChange}
             value={currentMode}
+            onChange={onModeChange}
             className="w-[70px] text-xs bg-stone-600/10 px-1.5 py-1.5 rounded-lg text-stone-700 cursor-pointer outline-none hover:bg-stone-600/20 transition-colors text-center relative z-30"
           >
-            {['Major', 'Minor', 'Lydian'].map(mode => (
-              <option key={mode} value={mode} className="bg-white text-stone-700 text-xs">
-                {mode}
-              </option>
-            ))}
+            {isCustomMode ? (
+              <option value="Custom">Custom</option>
+            ) : (
+              <>
+                <option value="Major">Major</option>
+                <option value="Minor">Minor</option>
+                <option value="Lydian">Lydian</option>
+              </>
+            )}
           </select>
         </div>
 

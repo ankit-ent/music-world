@@ -25,11 +25,22 @@ body {
   animation: starPulse 4s ease-out forwards;
 }
 
+.bubble.normal {
+  background: radial-gradient(
+    circle at center,
+    rgba(180, 180, 180, 1) 0%,
+    rgba(180, 180, 180, 0.9) 10%,
+    rgba(180, 180, 180, 0.6) 20%,
+    rgba(180, 180, 180, 0.3) 30%,
+    rgba(180, 180, 180, 0.1) 50%,
+    transparent 70%
+  );
+}
+
 .bubble.root-note {
   background: radial-gradient(
     circle at center,
     rgba(255, 255, 255, 1) 0%,
-    /* rgba(180, 180, 180, 1) 10%, */
     rgba(180, 180, 180, 0.5) 20%,
     rgba(180, 180, 180, 0.4) 30%,
     rgba(180, 180, 180, 0.3) 40%,

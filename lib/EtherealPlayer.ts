@@ -1,169 +1,134 @@
 import { OctaveConfig, octaveConfigs } from './OctaveConfig';
+import { MajorScale, MinorScale, LydianScale, CustomScale, type ScaleConfig, type NoteProperties, type ChordMode } from './ModeConfig';
 
+// Settings that can be changed during playback
 interface PlayerSettings {
-  root?: string;
-  mode?: string;
-  isDiatonic?: boolean;
+  root?: string;        // The root/home note (e.g., 'C', 'F#')
+  mode?: ChordMode;     // The scale mode (Major/Minor/Lydian/Custom)
+  isDiatonic?: boolean; // Whether to play only scale notes or include chromatic notes
 }
 
 export class EtherealPlayer {
-  public mainGainNode: GainNode;
-  public audioContext: AudioContext;
-  isPlaying: boolean;
-  noteInterval: NodeJS.Timeout | null;
-  chromaticOrder: string[];
-  majorScaleSteps: number[];
-  currentRoot: string;
-  homeNotes: string[];
-  diatonicNotes: string[];
-  chromaticNotes: string[];
-  baseFrequencies: { [key: string]: number };
-  notePositions: { [key: string]: number };
-  currentTempo: number;
-  modes: { [key: string]: number[] } = {
-    'Major': [0, 2, 4, 5, 7, 9, 11],
-    'Minor': [0, 2, 3, 5, 7, 8, 10],
-    'Lydian': [0, 2, 4, 6, 7, 9, 11]
+  // Audio-related properties
+  public mainGainNode: GainNode;        // Master volume control
+  public audioContext: AudioContext;     // Web Audio API context
+  isPlaying: boolean;                    // Current playback state
+  noteInterval: NodeJS.Timeout | null;   // Timer for playing random notes
+
+  // Musical properties
+  chromaticOrder: string[];             // All 12 notes in order
+  currentRoot: string;                  // Current root note
+  homeNotes: string[];                  // Root notes in different octaves
+  diatonicNotes: string[];             // Scale notes (excluding root)
+  chromaticNotes: string[];            // Non-scale notes
+  
+  // Frequency and position mappings
+  baseFrequencies: { [key: string]: number };  // Base frequencies for each note
+  notePositions: { [key: string]: number };    // Angular positions for visual display
+  
+  // Playback properties
+  currentTempo: number;                 // Speed of note generation
+  
+  // Scale configurations
+  modes: { [key: string]: ScaleConfig } = {
+    'Major': MajorScale,
+    'Minor': MinorScale,
+    'Lydian': LydianScale,
+    'Custom': CustomScale
   };
-  currentMode: string = 'Major';
-  chordTypes: { [key: string]: { [key: number]: number[] } } = {
-    'Major': {
-      0: [0, 4, 7],     // I:   root, 3rd, 5th
-      1: [2, 5, 9],     // ii:  2nd, 4th, 6th
-      2: [4, 7, 11],    // iii: 3rd, 5th, 7th
-      3: [5, 9, 12],    // IV:  4th, 6th, root
-      4: [7, 11, 14],   // V:   5th, 7th, 2nd
-      5: [9, 12, 16],   // vi:  6th, root, 3rd
-      6: [11, 14, 17]   // vii°: 7th, 2nd, 4th
-    },
-    'Minor': {
-      0: [0, 3, 7],     // i:   root, ♭3rd, 5th
-      1: [2, 5, 8],     // ii°: 2nd, 4th, ♭6th
-      2: [3, 7, 10],    // III: ♭3rd, 5th, ♭7th
-      3: [5, 8, 12],    // iv:  4th, ♭6th, root
-      4: [7, 10, 14],   // v:   5th, ♭7th, 2nd
-      5: [8, 12, 15],   // VI:  ♭6th, root, ♭3rd
-      6: [10, 14, 17]   // VII: ♭7th, 2nd, 4th
-    },
-    'Lydian': {
-      0: [0, 4, 7],     // I:   root, 3rd, 5th
-      1: [2, 6, 9],     // II:  2nd, #4th, 6th
-      2: [4, 7, 11],    // iii: 3rd, 5th, 7th
-      3: [6, 9, 13],    // iv°: #4th, 6th, root
-      4: [7, 11, 14],   // V:   5th, 7th, 2nd
-      5: [9, 12, 16],   // vi:  6th, root, 3rd
-      6: [11, 14, 18]   // vii: 7th, 2nd, 4th
-    }
-  };
-  playOnlyDiatonic: boolean = true;
-  private activeOscillators: OscillatorNode[] = [];
-  private activeGainNodes: GainNode[] = [];
-  private scaleTimeouts: NodeJS.Timeout[] = [];
-  private audioProcessor: ScriptProcessorNode | null = null;
-  private recordingBuffer: Float32Array[] = [];
+  currentMode: ChordMode = 'Major';
+  currentScale: ScaleConfig;
+  playOnlyDiatonic: boolean = true;     // Whether to include chromatic notes
+  
+  // Active sound management
+  private activeOscillators: OscillatorNode[] = [];  // Currently playing sounds
+  private activeGainNodes: GainNode[] = [];          // Volume controls for active sounds
+  private scaleTimeouts: NodeJS.Timeout[] = [];      // Timers for scale playback
 
   constructor() {
+    // Initialize Web Audio API context
     interface WindowWithWebkit extends Window {
       webkitAudioContext: typeof AudioContext;
     }
-
     this.audioContext = new (window.AudioContext || 
       (window as unknown as WindowWithWebkit).webkitAudioContext)();
+    
+    // Initialize basic properties
     this.isPlaying = false;
     this.noteInterval = null;
-    
     this.chromaticOrder = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    this.majorScaleSteps = this.modes['Major'];
     this.currentRoot = 'C';
+    this.currentScale = this.modes[this.currentMode];
     
+    // Initialize note arrays
     this.homeNotes = [];
     this.diatonicNotes = [];
     this.chromaticNotes = [];
     
+    // Set up frequency table (A4 = 440Hz as reference)
     this.baseFrequencies = {
       'C': 130.81, 'C#': 138.59, 'D': 146.83, 'D#': 155.56,
       'E': 164.81, 'F': 174.61, 'F#': 185.00, 'G': 196.00,
       'G#': 207.65, 'A': 220.00, 'A#': 233.08, 'B': 246.94
     };
 
+    // Define visual positions in degrees (0-360)
     this.notePositions = {
       'C': 0, 'C#': 30, 'D': 60, 'D#': 90, 'E': 120, 'F': 150,
       'F#': 180, 'G': 210, 'G#': 240, 'A': 270, 'A#': 300, 'B': 330
     };
 
-    this.currentTempo = 2.0;
+    this.currentTempo = 2.0;  // Notes per second
 
+    // Generate initial scale notes
     this.updateScale();
 
+    // Set up master volume
     this.mainGainNode = this.audioContext.createGain();
     this.mainGainNode.gain.value = 0.8;
     this.mainGainNode.connect(this.audioContext.destination);
   }
 
+  // Updates the available notes based on current root and mode
   updateScale() {
     const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-    
-    // Only use active octaves from config
     const activeOctaves = octaveConfigs.filter(config => config.isActive);
     
-    // Generate scale notes for active octaves
+    // Generate root notes for each active octave
     this.homeNotes = activeOctaves.map(config => `${this.currentRoot}${config.number}`);
     
     this.diatonicNotes = [];
     this.chromaticNotes = [];
     
+    // For each active octave, generate scale and non-scale notes
     activeOctaves.forEach(config => {
-      // Generate diatonic notes (notes in the scale)
-      this.majorScaleSteps.forEach(step => {
-        const noteIndex = (rootIndex + step) % 12;
-        const note = this.chromaticOrder[noteIndex];
-        if (note !== this.currentRoot) {
+      // Add active scale notes (excluding root)
+      this.currentScale.forEach((noteProps, index) => {
+        if (noteProps.isActive && index !== 0) {
+          const noteIndex = (rootIndex + index) % 12;
+          const note = this.chromaticOrder[noteIndex];
           this.diatonicNotes.push(`${note}${config.number}`);
         }
       });
 
-      // Generate chromatic notes
-      this.chromaticOrder.forEach((note, index) => {
-        if (!this.majorScaleSteps.includes((12 + index - rootIndex) % 12)) {
+      // Add non-scale notes (chromatic notes)
+      this.currentScale.forEach((noteProps, index) => {
+        if (!noteProps.isActive) {
+          const noteIndex = (rootIndex + index) % 12;
+          const note = this.chromaticOrder[noteIndex];
           this.chromaticNotes.push(`${note}${config.number}`);
         }
       });
     });
   }
 
-  setRoot(newRoot: string) {
-    // Store current playing state
-    const wasPlaying = this.isPlaying;
-    
-    // Temporarily pause random notes
-    if (this.noteInterval) {
-      clearInterval(this.noteInterval);
-    }
-    
-    this.currentRoot = newRoot;
-    this.updateScale();
-    
-    // Only play scale and continue with random notes if we were playing
-    if (wasPlaying) {
-      // Add a pause before playing the scale
-      setTimeout(() => {
-        const scaleDuration = this.playScale();
-        setTimeout(() => {
-          this.startRandomNotes();
-        }, scaleDuration + 500);
-      }, 1000); // 1 second pause before scale starts
-    }
-  }
-
+  // Selects a random note based on scale probabilities
   getRandomNote(): string {
-    // Get active octaves and their probabilities
+    // Select an octave based on configured probabilities
     const activeOctaves = octaveConfigs.filter(config => config.isActive);
-    
-    // Normalize probabilities to sum to 1
     const totalProb = activeOctaves.reduce((sum, config) => sum + config.probability, 0);
     const normalizedProbs = activeOctaves.map(config => config.probability / totalProb);
     
-    // Select an octave based on probability
     const rand = Math.random();
     let cumProb = 0;
     let selectedOctave = activeOctaves[0];
@@ -176,98 +141,96 @@ export class EtherealPlayer {
       }
     }
 
+    // Select note based on mode (diatonic or chromatic)
     if (this.playOnlyDiatonic) {
-      const random = Math.random() * 100;
-      
-      if (random < 20) {  // 20% chance for root note/chord
-        const playChord = Math.random() < 0.25;
-        if (playChord) {
-          const rootNote = `${this.currentRoot}${selectedOctave.number}`;
-          const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-          const intervals = this.chordTypes[this.currentMode][0];
-          
-          const chordNotes = intervals.map(interval => {
-            const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
-          });
-          
-          chordNotes.forEach((note, i) => {
-            setTimeout(() => this.playNote(note, 0.5, true), i * 30);
-          });
-          return rootNote;
-        }
-        return this.homeNotes[Math.floor(Math.random() * this.homeNotes.length)];
-      } else {  // 80% chance for other diatonic notes
-        const scaleDegree = 1 + Math.floor(Math.random() * (this.majorScaleSteps.length - 1));
-        const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-        const noteIndex = (rootIndex + this.majorScaleSteps[scaleDegree]) % 12;
-        const note = `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
-        
-        if (Math.random() < 0.25) {
-          const intervals = this.chordTypes[this.currentMode][scaleDegree];
-          const chordNotes = intervals.map(interval => {
-            const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
-          });
-          
-          chordNotes.forEach((note, i) => {
-            setTimeout(() => this.playNote(note, 0.5, true), i * 30);
-          });
-        }
-        return note;
-      }
-    } else {  // Non-diatonic mode
-      const random = Math.random() * 100;
-      
-      if (random < 20) {  // 20% chance for root note/chord
-        const playChord = Math.random() < 0.25;
-        if (playChord) {
-          const rootNote = `${this.currentRoot}${selectedOctave.number}`;
-          const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-          const intervals = this.chordTypes[this.currentMode][0];
-          
-          const chordNotes = intervals.map(interval => {
-            const noteIndex = (rootIndex + interval) % 12;
-            return `${this.chromaticOrder[noteIndex]}${selectedOctave.number}`;
-          });
-          
-          chordNotes.forEach((note, i) => {
-            setTimeout(() => this.playNote(note, 0.5, true), i * 30);
-          });
-          return rootNote;
-        }
-        return this.homeNotes[Math.floor(Math.random() * this.homeNotes.length)];
-      } else if (random < 95) {  // 75% chance for diatonic notes
-        const note = this.diatonicNotes[Math.floor(Math.random() * this.diatonicNotes.length)];
-        
-        // Add chord playing for diatonic notes
-        if (Math.random() < 0.25) {
-          const baseNote = note.replace(/[0-9]/g, '');
-          const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-          const noteIndex = this.chromaticOrder.indexOf(baseNote);
-          
-          // Find scale degree
-          const scaleDegree = this.majorScaleSteps.findIndex(step => 
-            (rootIndex + step) % 12 === noteIndex
-          );
-          
-          if (scaleDegree !== -1) {
-            const intervals = this.chordTypes[this.currentMode][scaleDegree];
-            const chordNotes = intervals.map(interval => {
-              const chordNoteIndex = (rootIndex + interval) % 12;
-              return `${this.chromaticOrder[chordNoteIndex]}${selectedOctave.number}`;
-            });
-            
-            chordNotes.forEach((note, i) => {
-              setTimeout(() => this.playNote(note, 0.5, true), i * 15);
-            });
-          }
-        }
-        return note;
-      } else {  // 5% chance for chromatic notes
-        return this.chromaticNotes[Math.floor(Math.random() * this.chromaticNotes.length)];
+      return this.getRandomDiatonicNote(selectedOctave);
+    } else {
+      return this.getRandomChromaticNote(selectedOctave);
+    }
+  }
+
+  // Helper method for selecting diatonic notes
+  private getRandomDiatonicNote(octave: OctaveConfig): string {
+    const random = Math.random();
+    let cumProb = 0;
+    let totalProb = 0;
+    
+    // Calculate total probability for active notes only
+    for (let i = 0; i < this.currentScale.length; i++) {
+      const noteProps = this.currentScale[i];
+      if (noteProps.isActive) {
+        totalProb += noteProps.prob;
       }
     }
+    
+    // Use scale-defined probabilities for active notes only
+    for (let i = 0; i < this.currentScale.length; i++) {
+      const noteProps = this.currentScale[i];
+      if (!noteProps.isActive) continue;
+      
+      cumProb += (noteProps.prob / totalProb);
+      if (random <= cumProb) {
+        const noteIndex = (this.chromaticOrder.indexOf(this.currentRoot) + i) % 12;
+        const note = `${this.chromaticOrder[noteIndex]}${octave.number}`;
+        
+        // Maybe play a chord
+        if (noteProps.intervals && Math.random() < 0.25) {
+          this.playChord(noteIndex, noteProps.intervals, octave);
+        }
+        
+        return note;
+      }
+    }
+    
+    // Fallback to root note
+    return `${this.currentRoot}${octave.number}`;
+  }
+
+  // Helper method for selecting chromatic notes
+  private getRandomChromaticNote(octave: OctaveConfig): string {
+    const random = Math.random();
+    let cumProb = 0;
+    let totalProb = 0;
+    
+    // Calculate total probability for all notes
+    for (const noteProps of this.currentScale) {
+      totalProb += noteProps.prob;
+    }
+    
+    const allNotes = this.currentScale.map((noteProps, index) => {
+      const noteIndex = (this.chromaticOrder.indexOf(this.currentRoot) + index) % 12;
+      return {
+        note: this.chromaticOrder[noteIndex],
+        props: noteProps
+      };
+    });
+    
+    for (const { note, props } of allNotes) {
+      cumProb += (props.prob / totalProb);
+      if (random <= cumProb) {
+        const fullNote = `${note}${octave.number}`;
+        
+        // Maybe play a chord
+        if (props.intervals && Math.random() < 0.25) {
+          const noteIndex = this.chromaticOrder.indexOf(note);
+          this.playChord(noteIndex, props.intervals, octave);
+        }
+        
+        return fullNote;
+      }
+    }
+    
+    // Fallback to root note
+    return `${this.currentRoot}${octave.number}`;
+  }
+
+  // Helper method for playing chords
+  private playChord(rootIndex: number, intervals: number[], octave: OctaveConfig) {
+    intervals.forEach((interval, idx) => {
+      const noteIndex = (rootIndex + interval) % 12;
+      const note = `${this.chromaticOrder[noteIndex]}${octave.number}`;
+      setTimeout(() => this.playNote(note, 0.5, true), idx * 30);
+    });
   }
 
   getFrequency(note: string): number {
@@ -292,11 +255,16 @@ export class EtherealPlayer {
     
     if (!octaveConfig?.isActive) return;  // Don't play inactive octaves
     
+    // Get note properties from scale config
+    const baseNote = note.replace(/[0-9]/g, '');
+    const noteIndex = (12 + this.chromaticOrder.indexOf(baseNote) - this.chromaticOrder.indexOf(this.currentRoot)) % 12;
+    const noteProps = this.currentScale[noteIndex];
+    
     // Use config values for volume and envelope
     const tempoFactor = Math.max(0.3, 1.0 - (this.currentTempo - 1.0) * 0.2);
     const maxVolume = isChordNote 
-      ? octaveConfig.volume * 0.05 * tempoFactor 
-      : octaveConfig.volume * 0.3 * tempoFactor;
+      ? noteProps.volume * octaveConfig.volume * 0.05 * tempoFactor 
+      : noteProps.volume * octaveConfig.volume * 0.3 * tempoFactor;
     
     gainNode.gain.setValueAtTime(0, now);
     gainNode.gain.linearRampToValueAtTime(maxVolume, now + octaveConfig.attack);
@@ -314,7 +282,7 @@ export class EtherealPlayer {
     this.activeGainNodes.push(gainNode);
 
     // Create the visual bubble with config values
-    this.createBubble(note, octaveConfig);
+    this.createBubble(note, octaveConfig, noteProps);
 
     setTimeout(() => {
       const index = this.activeOscillators.indexOf(oscillator);
@@ -338,7 +306,7 @@ export class EtherealPlayer {
     });
   }
 
-  createBubble(note: string, octaveConfig: OctaveConfig) {
+  createBubble(note: string, octaveConfig: OctaveConfig, noteProps: NoteProperties) {
     const spaceElement = document.getElementById('space');
     if (!spaceElement) return;
 
@@ -370,44 +338,8 @@ export class EtherealPlayer {
     bubble.className = 'bubble';
     bubble.style.opacity = octaveConfig.bubbleOpacity.toString();
     
-    if (baseNote === this.currentRoot) {
-      bubble.classList.add('root-note');
-    } else if (this.chromaticNotes.includes(note)) {
-      const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-      const noteIndex = this.chromaticOrder.indexOf(baseNote);
-      const semitones = (12 + noteIndex - rootIndex) % 12;
-      
-      // Map semitone positions to color indices for each mode
-      const colorMaps = {
-        'Major': {
-          1: 5,  // Minor second - Purple
-          3: 3,  // Minor third - Green
-          6: 2,  // Tritone - Red
-          8: 1,  // Minor sixth - Yellow
-          10: 4, // Minor seventh - Blue
-        },
-        'Minor': {
-          2: 5,  // Major second - Purple
-          4: 3,  // Major third - Green
-          7: 2,  // Augmented fifth - Red
-          9: 1,  // Major sixth - Yellow
-          11: 4, // Major seventh - Blue
-        },
-        'Lydian': {
-          1: 5,  // Minor second - Purple
-          3: 3,  // Minor third - Green
-          5: 2,  // Perfect fourth - Red
-          8: 1,  // Minor sixth - Yellow
-          10: 4, // Minor seventh - Blue
-        }
-      };
-      
-      const colorMap = colorMaps[this.currentMode as keyof typeof colorMaps];
-      const colorIndex = colorMap[semitones as keyof typeof colorMap];
-      if (colorIndex) {
-        bubble.classList.add(`chromatic-${colorIndex}`);
-      }
-    }
+    // Add color class based on note properties
+    bubble.classList.add(noteProps.color);
     
     if (octaveConfig.rippleEffect) {
       this.createRipple(x, y);
@@ -456,12 +388,20 @@ export class EtherealPlayer {
   }
 
   startRandomNotes() {
-    this.updateTempo(this.currentTempo);
+    if (this.noteInterval) {
+      clearInterval(this.noteInterval);
+    }
+    
+    const msPerBeat = 1000 / this.currentTempo;
+    const playRandomNote = () => {
+      const note = this.getRandomNote();
+      this.playNote(note);
+    };
+    
+    this.noteInterval = setInterval(playRandomNote, msPerBeat);
   }
 
   stop() {
-    // Don't set isPlaying here anymore since we set it in togglePlay
-    
     // Cancel all scheduled tasks first
     this.scaleTimeouts.forEach(timeout => clearTimeout(timeout));
     this.scaleTimeouts = [];
@@ -496,17 +436,9 @@ export class EtherealPlayer {
 
   updateTempo(bps: number) {
     this.currentTempo = bps;
-    if (this.noteInterval) {
-      clearInterval(this.noteInterval);
+    if (this.isPlaying) {
+      this.startRandomNotes(); // This will clear the existing interval and start a new one
     }
-    
-    const msPerBeat = 1000 / bps;
-    const playRandomNote = () => {
-      const note = this.getRandomNote();
-      this.playNote(note);
-    };
-    
-    this.noteInterval = setInterval(playRandomNote, msPerBeat);
   }
 
   playScale() {
@@ -514,43 +446,46 @@ export class EtherealPlayer {
     const middleOctaveConfig = octaveConfigs.find(config => config.number === 4);
     if (!middleOctaveConfig?.isActive) return 0;  // Return if middle octave is inactive
     
-    const scaleNotes = this.majorScaleSteps.map(step => {
-      const noteIndex = (this.chromaticOrder.indexOf(this.currentRoot) + step) % 12;
-      return `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
-    });
+    const scaleNotes = this.currentScale
+      .map((noteProps, index) => {
+        if (!noteProps.isActive) return null;
+        const noteIndex = (this.chromaticOrder.indexOf(this.currentRoot) + index) % 12;
+        return `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
+      })
+      .filter((note): note is string => note !== null);
 
     // Clear any existing timeouts first
     this.scaleTimeouts.forEach(timeout => clearTimeout(timeout));
     this.scaleTimeouts = [];
 
-    scaleNotes.forEach((note, index) => {
+    scaleNotes.forEach((note: string, index: number) => {
       const timeout = setTimeout(() => {
         this.playNote(note, 0.5);
       }, index * 300);
       this.scaleTimeouts.push(timeout);
     });
 
+    // Play root note chord at the end
     const chordDelay = scaleNotes.length * 300 + 200;
     const chordTimeout = setTimeout(() => {
       const rootIndex = this.chromaticOrder.indexOf(this.currentRoot);
-      const intervals = this.chordTypes[this.currentMode][0];
-      const chordNotes = intervals.map(interval => {
-        const noteIndex = (rootIndex + interval) % 12;
-        return `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
-      });
-      
-      chordNotes.forEach(note => {
-        this.playNote(note, 2);
-      });
+      const rootNoteProps = this.currentScale[0];
+      if (rootNoteProps.intervals) {
+        rootNoteProps.intervals.forEach((interval, idx) => {
+          const noteIndex = (rootIndex + interval) % 12;
+          const note = `${this.chromaticOrder[noteIndex]}${middleOctaveConfig.number}`;
+          setTimeout(() => this.playNote(note, 1.0, false), idx * 30);  // Play chord notes at normal volume and longer duration
+        });
+      }
     }, chordDelay);
     this.scaleTimeouts.push(chordTimeout);
 
-    return chordDelay + 2000;
+    return chordDelay + 1500;  // Return total duration with a shorter delay
   }
 
-  setMode(mode: string) {
+  setMode(mode: ChordMode) {
     this.currentMode = mode;
-    this.majorScaleSteps = this.modes[mode];
+    this.currentScale = this.modes[mode];
     this.updateScale();
   }
 
@@ -565,6 +500,30 @@ export class EtherealPlayer {
     });
   }
 
+  setRoot(newRoot: string) {
+    // Store current playing state
+    const wasPlaying = this.isPlaying;
+    
+    // Temporarily pause random notes
+    if (this.noteInterval) {
+      clearInterval(this.noteInterval);
+    }
+    
+    this.currentRoot = newRoot;
+    this.updateScale();
+    
+    // Only play scale and continue with random notes if we were playing
+    if (wasPlaying) {
+      // Add a pause before playing the scale
+      setTimeout(() => {
+        const scaleDuration = this.playScale();
+        setTimeout(() => {
+          this.startRandomNotes();
+        }, scaleDuration + 500);
+      }, 1000); // 1 second pause before scale starts
+    }
+  }
+
   checkAndApplyChanges(newSettings: PlayerSettings) {
     let hasChanges = false;
     
@@ -575,7 +534,7 @@ export class EtherealPlayer {
     
     if (newSettings.mode && newSettings.mode !== this.currentMode) {
       this.currentMode = newSettings.mode;
-      this.majorScaleSteps = this.modes[newSettings.mode];
+      this.currentScale = this.modes[newSettings.mode];
       hasChanges = true;
     }
     
@@ -597,113 +556,6 @@ export class EtherealPlayer {
         this.updateScale();
       }
     }
-  }
-
-  async startRecording(): Promise<void> {
-    try {
-      this.recordingBuffer = [];
-      
-      // Create a separate recording path
-      const recordingDestination = this.audioContext.createMediaStreamDestination();
-      this.audioProcessor = this.audioContext.createScriptProcessor(4096, 2, 2);
-      
-      // Create a separate gain node for recording
-      const recordingGain = this.audioContext.createGain();
-      recordingGain.gain.value = 1.0;
-
-      // Create two paths:
-      // 1. Main path for live playback
-      this.mainGainNode.connect(this.audioContext.destination);
-      
-      // 2. Recording path
-      this.mainGainNode.connect(recordingGain);
-      recordingGain.connect(this.audioProcessor);
-      this.audioProcessor.connect(recordingDestination);
-
-      // Capture audio data
-      this.audioProcessor.onaudioprocess = (e) => {
-        const left = e.inputBuffer.getChannelData(0);
-        const right = e.inputBuffer.getChannelData(1);
-        
-        // Store exact copies
-        this.recordingBuffer.push(
-          new Float32Array(left),
-          new Float32Array(right)
-        );
-      };
-
-    } catch (err) {
-      console.error('Error starting recording:', err);
-      throw err;
-    }
-  }
-
-  async stopRecording(): Promise<Blob> {
-    return new Promise((resolve) => {
-      if (!this.audioProcessor) return;
-
-      // Remove the audio processing event handler
-      this.audioProcessor.onaudioprocess = null;
-
-      try {
-        // Disconnect nodes
-        this.audioProcessor.disconnect();
-      } catch (e) {
-        console.warn('Error disconnecting processor:', e);
-      }
-
-      // Convert buffer to WAV
-      const wavData = this.encodeWAV(this.recordingBuffer);
-      const blob = new Blob([wavData], { type: 'audio/wav' });
-      this.recordingBuffer = [];
-      
-      // Clear processor reference
-      this.audioProcessor = null;
-      
-      resolve(blob);
-    });
-  }
-
-  private encodeWAV(buffers: Float32Array[]): ArrayBuffer {
-    const length = buffers.reduce((acc, buf) => acc + buf.length, 0);
-    const sampleRate = this.audioContext.sampleRate;
-    const channels = 2;
-    
-    const buffer = new ArrayBuffer(44 + length * 2);
-    const view = new DataView(buffer);
-
-    // Write WAV header
-    const writeString = (view: DataView, offset: number, str: string) => {
-      for (let i = 0; i < str.length; i++) {
-        view.setUint8(offset + i, str.charCodeAt(i));
-      }
-    };
-
-    writeString(view, 0, 'RIFF');
-    view.setUint32(4, 36 + length * 2, true);
-    writeString(view, 8, 'WAVE');
-    writeString(view, 12, 'fmt ');
-    view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true);
-    view.setUint16(22, channels, true);
-    view.setUint32(24, sampleRate, true);
-    view.setUint32(28, sampleRate * channels * 2, true);
-    view.setUint16(32, channels * 2, true);
-    view.setUint16(34, 16, true);
-    writeString(view, 36, 'data');
-    view.setUint32(40, length * 2, true);
-
-    // Write audio data
-    let offset = 44;
-    for (let i = 0; i < buffers.length; i++) {
-      for (let j = 0; j < buffers[i].length; j++) {
-        const sample = Math.max(-1, Math.min(1, buffers[i][j]));
-        view.setInt16(offset, sample * 0x7FFF, true);
-        offset += 2;
-      }
-    }
-
-    return buffer;
   }
 }
 
