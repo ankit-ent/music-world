@@ -1,7 +1,6 @@
 'use client'
 
 import EtherealSpace from '@/components/EtherealSpace';
-import Footer from '@/components/Footer';
 
 export default function CustomPlayerPage() {
   return (

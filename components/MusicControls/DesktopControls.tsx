@@ -18,7 +18,6 @@ interface DesktopControlsProps {
 }
 
 export default function DesktopControls({
-  player,
   tempoValue,
   currentRoot,
   currentMode,
