@@ -59,7 +59,7 @@ export default function ProfilePage() {
                             href="https://www.wavylines.in" 
                             className="text-stone-700 bg-stone-200 px-2 py-0.5 rounded text-sm hover:bg-stone-300 transition-colors"
                             target="_blank"
-                            rel="noopener"
+                            rel="external"
                             title="An experimental website made primarily for music"
                           >
                             wavylines.in
@@ -94,7 +94,7 @@ export default function ProfilePage() {
                             href="https://www.gonimble.in" 
                             className="text-white bg-blue-400 px-2 py-0.5 rounded text-sm hover:bg-blue-500 transition-colors"
                             target="_blank"
-                            rel="noopener"
+                            rel="external"
                             title="A marketplace platform helping schools and companies connect with vendors across India"
                           >
                             gonimble.in
@@ -122,7 +122,7 @@ export default function ProfilePage() {
                             href="https://www.school-page.com" 
                             className="text-white bg-emerald-600 px-2 py-0.5 rounded text-sm hover:bg-emerald-700 transition-colors"
                             target="_blank"
-                            rel="noopener"
+                            rel="external"
                             title="An LLM Assistant for teachers and schools. Helps make lesson plans, questions, and even provides an NCF Assistant"
                           >
                             school-pages.com
@@ -160,7 +160,7 @@ export default function ProfilePage() {
                             href="https://ankitgoa.store" 
                             className="text-yellow-950 bg-yellow-200 px-2 py-0.5 rounded text-sm hover:bg-amber-300 transition-colors"
                             target="_blank"
-                            rel="noopener"
+                            rel="external"
                             title="A notebook, stationery, and uniform store for school students"
                           >
                             dotsandgrids.com
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                             href="https://mycodeworld.in" 
                             className="text-white bg-blue-700 px-2 py-0.5 rounded text-sm hover:bg-blue-800 transition-colors"
                             target="_blank"
-                            rel="noopener"
+                            rel="external"
                             title="A computer course curriculum for schools"
                           >
                             mycodeworld.in
