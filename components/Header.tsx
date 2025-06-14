@@ -29,6 +29,7 @@ export default function Header() {
       {/* Desktop nav */}
       <nav className="hidden md:flex gap-6 text-sm text-stone-500">
         <Link href="/#what-is-music" className="hover:text-stone-800">Guide</Link>
+        {/* <Link href="/soundscapes" className="hover:text-stone-800">Soundscapes</Link> */}
       </nav>
 
       {/* Mobile menu button */}
@@ -56,6 +57,13 @@ export default function Header() {
             >
               Guide
             </Link>
+            {/* <Link 
+              href="/soundscapes" 
+              className="hover:text-stone-900 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Soundscapes
+            </Link> */}
           </div>
         </nav>
       )}

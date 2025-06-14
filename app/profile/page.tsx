@@ -81,31 +81,38 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  {/* Nimble */}
+                  {/* CodeWorld */}
                   <div className="pt-8 first:pt-0 group">
                     <div className="flex items-start justify-between">
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium">Nimble</h3>
-                          <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <h3 className="text-lg font-medium">CodeWorld</h3>
+                          <svg className="w-4 h-4 text-[#028EFB]/90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                           <Link 
-                            href="https://www.gonimble.in" 
-                            className="text-white bg-blue-400 px-2 py-0.5 rounded text-sm hover:bg-blue-500 transition-colors"
+                            href="https://mycodeworld.in" 
+                            className="text-white bg-[#028EFB]/90 px-2 py-0.5 rounded text-sm hover:bg-[#028EFB] transition-colors"
                             target="_blank"
                             rel="external"
-                            title="A marketplace platform helping schools and companies connect with vendors across India"
+                            title="A computer course curriculum for schools"
                           >
-                            gonimble.in
+                            mycodeworld.in
                           </Link>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-stone-600">A marketplace platform helping schools and companies connect with vendors across India</p>
-                          <p className="text-stone-400 text-xs italic"> - A very backend heavy project, with a well defined design system</p>
+                          <p className="text-stone-600">A computer course curriculum for schools</p>
+                          <p className="text-stone-400 text-xs italic"> - An LMS for schools built from scratch. Gamification, AI, and a lot of other stuff.</p>
                         </div>
+                        {/* <div className="flex gap-2">
+                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
+                            wordpress
+                          </span>
+                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
+                            design systems
+                          </span>
+                        </div> */}
                       </div>
-                      <span className="text-xs text-stone-500 px-2 py-0.5 rounded-full bg-stone-100">wip</span>
                     </div>
                   </div>
 
@@ -125,7 +132,7 @@ export default function ProfilePage() {
                             rel="external"
                             title="An LLM Assistant for teachers and schools. Helps make lesson plans, questions, and even provides an NCF Assistant"
                           >
-                            school-pages.com
+                            school-page.com
                           </Link>
                         </div>
                         <div className="space-y-2">
@@ -143,6 +150,61 @@ export default function ProfilePage() {
                             LLM apis
                           </span>
                         </div> */}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Nimble */}
+                  <div className="pt-8 first:pt-0 group">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-4 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-medium">Nimble</h3>
+                          <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                          <Link 
+                            href="https://www.gonimble.in" 
+                            className="text-white bg-blue-500 px-2 py-0.5 rounded text-sm hover:bg-blue-600 transition-colors"
+                            target="_blank"
+                            rel="external"
+                            title="A marketplace platform helping schools and companies connect with vendors across India. Lot to build still."
+                          >
+                            gonimble.in
+                          </Link>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-stone-600">A marketplace platform helping schools and companies connect with vendors across India. Lot to build still.</p>
+                          <p className="text-stone-400 text-xs italic"> - A very backend heavy project</p>
+                        </div>
+                      </div>
+                      <span className="text-xs text-stone-500 px-2 py-0.5 rounded-full bg-stone-100">wip</span>
+                    </div>
+                  </div>
+
+                  {/* OrderForms */}
+                  <div className="pt-8 first:pt-0 group">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-4 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-medium">OrderForms</h3>
+                          <svg className="w-4 h-4 text-[#3A2A1F]/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                          <Link 
+                            href="https://order-forms-kappa.vercel.app/" 
+                            className="text-white bg-[#3A2A1F]/80 px-2 py-0.5 rounded text-sm hover:bg-[#3A2A1F]/90 transition-colors"
+                            target="_blank"
+                            rel="external"
+                            title="A better Google Form replacement for school ordering"
+                          >
+                            order-forms.vercel.app
+                          </Link>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-stone-600">Made for a particular school where students and parents can order customized sets. It's a much better Google Form replacement for our use case, with a smoothher UI and an automated backend.</p>
+                          <p className="text-stone-400 text-xs italic"> - Automates creating invoices based on available items, tracking ordered sets shipped, sold, etc.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -178,80 +240,11 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
-
-                  {/* CodeWorld */}
-                  <div className="pt-8 first:pt-0 group">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-4 flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-medium">CodeWorld</h3>
-                          <svg className="w-4 h-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                          <Link 
-                            href="https://mycodeworld.in" 
-                            className="text-white bg-blue-700 px-2 py-0.5 rounded text-sm hover:bg-blue-800 transition-colors"
-                            target="_blank"
-                            rel="external"
-                            title="A computer course curriculum for schools"
-                          >
-                            mycodeworld.in
-                          </Link>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-stone-600">A computer course curriculum for schools</p>
-                          <p className="text-stone-400 text-xs italic"> - A go at wordpress</p>
-                        </div>
-                        {/* <div className="flex gap-2">
-                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
-                            wordpress
-                          </span>
-                          <span className="text-xs text-blue-600 px-2 py-0.5 rounded-full bg-blue-50">
-                            design systems
-                          </span>
-                        </div> */}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Travel Section
-          <div className="mb-12">
-            <h2 className="text-2xl font-serif text-stone-800 mb-2">Travel</h2>
-            <Card>
-              <CardContent className="h-24 flex flex-col justify-center py-4">
-                <div className="flex items-center justify-center gap-3">
-                  <svg 
-                    className="w-5 h-5 text-stone-400" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
-                    />
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
-                    />
-                  </svg>
-                  <p className="text-stone-600 italic text-sm">
-                    A fun interactive bingo map coming soon...
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div> */}
-
-          {/* After Travel Section */}
           <div className="flex justify-center gap-6 mt-12 mb-2">
             <Link 
               href="https://twitter.com/ankitsharma_yf" 
