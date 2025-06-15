@@ -23,7 +23,7 @@ export default function SoundscapesPage() {
             
             <div className="text-sm text-stone-500 mt-4">
               <p>Use your keyboard to play notes: A-L for white keys, W-E-T-Y-U for black keys.</p>
-              <p>Click the "Show Keyboard Map" button to see all key mappings.</p>
+              <p>Click the &quot;Show Keyboard Map&quot; button to see all key mappings.</p>
             </div>
           </div>
           
@@ -34,7 +34,7 @@ export default function SoundscapesPage() {
               <li>Changing the root note transposes all keys but keeps the same relative pattern.</li>
               <li>White keys represent major/perfect intervals (major 2nd, major 3rd, perfect 5th, etc.)</li>
               <li>Black keys represent minor/diminished intervals (minor 2nd, minor 3rd, tritone, etc.)</li>
-              <li>The A key always plays the root note of whatever scale you've selected.</li>
+              <li>The A key always plays the root note of whatever scale you&apos;ve selected.</li>
             </ul>
           </div>
         </div>

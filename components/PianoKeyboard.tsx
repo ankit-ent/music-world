@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 // Keyboard component props
 interface PianoKeyboardProps {
@@ -60,9 +60,44 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
   // Map of currently active oscillators (for UI updates)
   const [activeNotes, setActiveNotes] = useState<Record<string, boolean>>({});
   
+  // Cleanup all active sounds
+  const cleanupAllSounds = useCallback(() => {
+    // Stop all oscillators and disconnect nodes
+    Object.entries(oscillatorsRef.current).forEach(([_, osc]) => {
+      try {
+        osc.stop();
+        osc.disconnect();
+      } catch {
+        // Ignore disconnection errors
+      }
+    });
+    
+    // Clear all gain nodes
+    Object.values(gainNodesRef.current).forEach(gainNode => {
+      try {
+        gainNode.disconnect();
+      } catch {
+        // Ignore disconnection errors
+      }
+    });
+    
+    // Clear all timeout references
+    Object.values(timeoutsRef.current).forEach(timeout => {
+      clearTimeout(timeout);
+    });
+    
+    // Reset refs
+    oscillatorsRef.current = {};
+    gainNodesRef.current = {};
+    timeoutsRef.current = {};
+    
+    // Reset active notes for UI
+    setActiveNotes({});
+  }, []);
+  
   // Scale degree to semitone mapping (relative to root)
   // This maps each scale degree to the number of semitones from the root
-  const scaleDegreeSemitones: Record<ScaleDegree, number> = {
+  const scaleDegreeSemitones = useMemo(() => ({
     'root': 0,    // Root note
     'min2': 1,    // Minor second
     'maj2': 2,    // Major second
@@ -78,14 +113,14 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
     'oct': 12,    // Octave
     'min9': 13,   // Minor ninth
     'maj9': 14,   // Major ninth
-  };
+  }), []);
   
   // Define which scale degrees are white vs black keys on our keyboard
   const whiteKeyScaleDegrees: ScaleDegree[] = ['root', 'maj2', 'maj3', 'per4', 'per5', 'maj6', 'maj7', 'oct', 'maj9'];
   const blackKeyScaleDegrees: ScaleDegree[] = ['min2', 'min3', 'tri', 'min6', 'min7'];
   
   // Map keyboard keys to scale degrees
-  const keyboardMapping: Record<string, ScaleDegree> = {
+  const keyboardMapping = useMemo(() => ({
     'a': 'root',    // Root note
     's': 'maj2',    // Major second
     'd': 'maj3',    // Major third
@@ -101,7 +136,7 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
     't': 'tri',     // Tritone
     'y': 'min6',    // Minor sixth
     'u': 'min7',    // Minor seventh
-  };
+  } as Record<string, ScaleDegree>), []);
   
   // Function to get the actual note based on scale degree and root
   const getNoteFromScaleDegree = useCallback((scaleDegree: ScaleDegree): string => {
@@ -152,8 +187,9 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
         if (audioContext) return; // Already initialized
         
         try {
-          const newAudioContext = new (window.AudioContext || 
-            (window as any).webkitAudioContext)();
+          const AudioContextClass = window.AudioContext || 
+            ((window as unknown) as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+          const newAudioContext = new AudioContextClass();
           
           const newGainNode = newAudioContext.createGain();
           newGainNode.gain.value = 0.5;
@@ -161,8 +197,8 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
           
           setAudioContext(newAudioContext);
           setMainGainNode(newGainNode);
-        } catch (e) {
-          console.error('Failed to initialize audio context', e);
+              } catch (error) {
+        console.error('Failed to initialize audio context', error);
         }
       };
 
@@ -185,42 +221,7 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
         }
       };
     }
-  }, [audioContext]);
-
-  // Cleanup all active sounds
-  const cleanupAllSounds = useCallback(() => {
-    // Stop all oscillators and disconnect nodes
-    Object.entries(oscillatorsRef.current).forEach(([key, osc]) => {
-      try {
-        osc.stop();
-        osc.disconnect();
-      } catch (e) {
-        // Ignore disconnection errors
-      }
-    });
-    
-    // Clear all gain nodes
-    Object.values(gainNodesRef.current).forEach(gainNode => {
-      try {
-        gainNode.disconnect();
-      } catch (e) {
-        // Ignore disconnection errors
-      }
-    });
-    
-    // Clear all timeout references
-    Object.values(timeoutsRef.current).forEach(timeout => {
-      clearTimeout(timeout);
-    });
-    
-    // Reset refs
-    oscillatorsRef.current = {};
-    gainNodesRef.current = {};
-    timeoutsRef.current = {};
-    
-    // Reset active notes for UI
-    setActiveNotes({});
-  }, []);
+  }, [audioContext, cleanupAllSounds]);
 
   // Helper function to clean up a single note
   const cleanupNote = useCallback((scaleDegree: ScaleDegree) => {
@@ -294,8 +295,8 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
       
       // Update the UI state
       setActiveNotes(prev => ({ ...prev, [scaleDegree]: true }));
-    } catch (e) {
-      console.error('Error playing note:', e);
+    } catch (error) {
+      console.error('Error playing note:', error);
     }
     
   }, [audioContext, mainGainNode, calculateFrequency, getNoteFromScaleDegree, cleanupNote]);
@@ -335,8 +336,8 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
         
         // Store timeout reference for cleanup
         timeoutsRef.current[scaleDegree] = timeout;
-      } catch (e) {
-        console.error('Error stopping note:', e);
+      } catch (error) {
+        console.error('Error stopping note:', error);
         
         // Force cleanup in case of error
         cleanupNote(scaleDegree);

@@ -202,7 +202,7 @@ export default function ProfilePage() {
                           </Link>
                         </div>
                         <div className="space-y-2">
-                          <p className="text-stone-600">Made for a particular school where students and parents can order customized sets. It's a much better Google Form replacement for our use case, with a smoothher UI and an automated backend.</p>
+                          <p className="text-stone-600">Made for a particular school where students and parents can order customized sets. It&apos;s a much better Google Form replacement for our use case, with a smoothher UI and an automated backend.</p>
                           <p className="text-stone-400 text-xs italic"> - Automates creating invoices based on available items, tracking ordered sets shipped, sold, etc.</p>
                         </div>
                       </div>
