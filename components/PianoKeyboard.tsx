@@ -63,7 +63,7 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
   // Cleanup all active sounds
   const cleanupAllSounds = useCallback(() => {
     // Stop all oscillators and disconnect nodes
-    Object.entries(oscillatorsRef.current).forEach(([_, osc]) => {
+    Object.entries(oscillatorsRef.current).forEach(([, osc]) => {
       try {
         osc.stop();
         osc.disconnect();
@@ -239,7 +239,7 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
         oscillator.stop();
         oscillator.disconnect();
         gainNode.disconnect();
-      } catch (e) {
+      } catch {
         // Ignore errors if already stopped
       }
       
@@ -440,13 +440,13 @@ export default function PianoKeyboard({ className = '', rootNote = 'C' }: PianoK
 
   // Get white and black keys for rendering
   const whiteKeys = Object.entries(keyboardMapping)
-    .filter(([_, degree]) => whiteKeyScaleDegrees.includes(degree))
+    .filter(([, degree]) => whiteKeyScaleDegrees.includes(degree))
     .sort((a, b) => {
       return whiteKeyScaleDegrees.indexOf(a[1]) - whiteKeyScaleDegrees.indexOf(b[1]);
     });
     
   const blackKeys = Object.entries(keyboardMapping)
-    .filter(([_, degree]) => blackKeyScaleDegrees.includes(degree))
+    .filter(([, degree]) => blackKeyScaleDegrees.includes(degree))
     .sort((a, b) => {
       return blackKeyScaleDegrees.indexOf(a[1]) - blackKeyScaleDegrees.indexOf(b[1]);
     });
