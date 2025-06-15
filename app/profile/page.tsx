@@ -196,9 +196,9 @@ export default function ProfilePage() {
                             className="text-white bg-[#3A2A1F]/80 px-2 py-0.5 rounded text-sm hover:bg-[#3A2A1F]/90 transition-colors"
                             target="_blank"
                             rel="external"
-                            title="A better Google Form replacement for school ordering"
+                            title="An ordering system for a school"
                           >
-                            order-forms.vercel.app
+                            order-forms
                           </Link>
                         </div>
                         <div className="space-y-2">
