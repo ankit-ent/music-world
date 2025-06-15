@@ -16,8 +16,8 @@ const notoSerif = Noto_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.wavylines.in'),
   title: "Wavy Lines",
-  description: "For some spacey music",
-  keywords: ['music', 'space music', 'ambient', 'electronic music', 'wavy lines', 'music streaming'],
+  description: "Designs, apps, music and a whole lot of experimentation",
+  keywords: ['music', 'space music', 'ambient', 'wavy lines', 'design', 'apps', 'experiments'],
   authors: [{ name: 'Wavy Lines' }],
   creator: 'Wavy Lines',
   publisher: 'Wavy Lines',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.wavylines.in',
     title: 'Wavy Lines',
-    description: 'For some spacey music',
+    description: 'Designs, apps, music and a whole lot of experimentation',
     siteName: 'Wavy Lines',
     images: [{
       url: '/og-image.jpg',
